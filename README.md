@@ -1,2 +1,27 @@
 # VaporClient
-Client to consume [VaporAPI](https://github.com/SrPatsu21/VaporAPI.git)
+
+## Technologies
+
+### Client
+
+electron
+
+### Application User Authentication
+
+Through the app connecting to the API using the https method
+
+### Versioning
+
+version.feature.bugfix
+
+### Client Documentation
+
+[Documentation](Documentation.md)
+
+#### Contains:
+
+- Details about functionality:
+- download files
+- publish files
+- customization options
+- Integration with other technologies
