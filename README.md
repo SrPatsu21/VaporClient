@@ -2,11 +2,13 @@
 
 ## Technologies
 
+### Developer versions
+node v22.14.0
+npm 10.9.2
+
 ### Client
 
 electron
-node v22.14.0
-npm 10.9.2
 
 ### Application User Authentication
 
