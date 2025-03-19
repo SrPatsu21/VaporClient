@@ -17,7 +17,7 @@ const createWindow = () => {
     win.loadFile("index.html");
 };
 
-//* if all windows are closed then close the process app
+//* if all windows are closed then stop the process app
 app.on("window-all-closed", () => {
     app.quit();
 });

@@ -6,6 +6,12 @@
 node v22.14.0
 npm 10.9.2
 
+### Dev How to run
+Open terminal in the folder app/ and use the command:
+```bash
+npm run start
+```
+
 ### Client
 
 electron
