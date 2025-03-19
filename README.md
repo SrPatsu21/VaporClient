@@ -3,7 +3,7 @@
 ## Technologies
 
 ### Developer requirements versions
-node v22.14.0
+node v22.14.0 \
 npm 10.9.2
 
 ### Dev How to run
