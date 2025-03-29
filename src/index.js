@@ -12,7 +12,7 @@ const createWindow = () => {''
         width: primaryDisplay.width,
         height: primaryDisplay.height,
     });
-    win.loadFile("index.html");
+    win.loadFile("./views/homepage/index.html");
 };
 //* if all windows are closed then stop the process app
 app.on("window-all-closed", () => {
