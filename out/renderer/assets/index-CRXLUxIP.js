@@ -12038,44 +12038,8 @@ function requireClient() {
   return client.exports;
 }
 var clientExports = requireClient();
-function Versions() {
-  const [versions] = reactExports.useState(window.electron.process.versions);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("ul", { className: "versions", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { className: "electron-version", children: [
-      "Electron v",
-      versions.electron
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { className: "chrome-version", children: [
-      "Chromium v",
-      versions.chrome
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { className: "node-version", children: [
-      "Node v",
-      versions.node
-    ] })
-  ] });
-}
-const electronLogo = "" + new URL("electron-DtwWEc_u.svg", import.meta.url).href;
 function App() {
-  const ipcHandle = () => window.electron.ipcRenderer.send("ping");
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("img", { alt: "logo", className: "logo", src: electronLogo }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "creator", children: "Powered by electron-vite" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text", children: [
-      "Build an Electron app with ",
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "react", children: "React" })
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "tip", children: [
-      "Please try pressing ",
-      /* @__PURE__ */ jsxRuntimeExports.jsx("code", { children: "F12" }),
-      " to open the devTool"
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "actions", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "action", children: /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "https://electron-vite.org/", target: "_blank", rel: "noreferrer", children: "Documentation" }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "action", children: /* @__PURE__ */ jsxRuntimeExports.jsx("a", { target: "_blank", rel: "noreferrer", onClick: ipcHandle, children: "Send IPC" }) })
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Versions, {})
-  ] });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: "hello world!" }) });
 }
 clientExports.createRoot(document.getElementById("root")).render(
   /* @__PURE__ */ jsxRuntimeExports.jsx(reactExports.StrictMode, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, {}) })
