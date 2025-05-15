@@ -1,37 +1,34 @@
-# VaporClient
+# electron-app
 
-## Technologies
+An Electron application with React
 
-### Developer requirements versions
-node v22.14.0 \
-npm 10.9.2
+## Recommended IDE Setup
 
-### Dev How to run
-Open terminal in the folder app/ and use the command:
+- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+
+## Project Setup
+
+### Install
+
 ```bash
-npm run start
+$ npm install
 ```
 
-### Client
+### Development
 
-electron
+```bash
+$ npm run dev
+```
 
-### Application User Authentication
+### Build
 
-Through the app connecting to the API using the https method
+```bash
+# For windows
+$ npm run build:win
 
-### Versioning
+# For macOS
+$ npm run build:mac
 
-version.feature.bugfix
-
-### Client Documentation
-
-[Documentation](Documentation.md)
-
-#### Contains:
-
-- Details about functionality:
-- download files
-- publish files
-- customization options
-- Integration with other technologies
+# For Linux
+$ npm run build:linux
+```
