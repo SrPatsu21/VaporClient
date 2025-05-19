@@ -1,12 +1,15 @@
 import { HashRouter, Link, Routes, Route } from "react-router-dom";
 import Home from "./components/Home/Home";
 import About from "./components/About/About";
+import Header from "./components/Header/Header";
 
 function App() {
     return (
         <>
         <HashRouter>
-            <header>
+            <Header />
+            {/* <header>
+                <Header />
                 <nav>
                     <ul>
                         <li>
@@ -17,7 +20,7 @@ function App() {
                         </li>
                     </ul>
                 </nav>
-            </header>
+            </header> */}
 
             <Routes>
                 <Route path="/" element={<Home/>} />
