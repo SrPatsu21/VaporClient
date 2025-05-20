@@ -1,2 +1,18 @@
 @import "tailwindcss";
 
+/*
+ * default theme
+*/
+
+:root {
+    font-family: 'Roboto';
+    /** colors */
+    --danger_color: #e54b4b;
+    --warning_color: #ffa987;
+    --text_color1: #ffffff;
+    --text_color2: #000000;
+    --background_color1: #444140;
+    --background_color2: #575453;
+    --background_color3: #f7ebe8;
+    --background_color4: #d9d9d9;
+}
