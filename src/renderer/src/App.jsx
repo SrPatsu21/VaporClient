@@ -27,7 +27,7 @@ function App() {
                 <Route path="/about" element={<About/>} />
             </Routes>
 
-            <footer>
+            <footer className="h-[200vh]">
                 footer
             </footer>
         </HashRouter>

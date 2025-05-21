@@ -1,5 +1,4 @@
 @import "tailwindcss";
-
 /*
  * default theme
 */
@@ -23,4 +22,11 @@
     --hover_background_color3: #f7ebe899;
     --background_color4: #d9d9d9;
     --hover_background_color4: #d9d9d999;
+}
+
+.custom-scrollbar {
+    scrollbar-width: thin;
+}
+.custom-scrollbar_warning_color {
+    scrollbar-color: var(--warning_color) var(--background_color1);
 }
