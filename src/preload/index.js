@@ -1,20 +1,28 @@
-import { contextBridge } from 'electron'
-import { electronAPI } from '@electron-toolkit/preload'
+const { contextBridge, ipcRenderer } = require("electron");
 
-// Custom APIs for renderer
-const api = {}
-
-// Use `contextBridge` APIs to expose Electron APIs to
-// renderer only if context isolation is enabled, otherwise
-// just add to the DOM global.
-if (process.contextIsolated) {
-  try {
-    contextBridge.exposeInMainWorld('electron', electronAPI)
-    contextBridge.exposeInMainWorld('api', api)
-  } catch (error) {
-    console.error(error)
-  }
-} else {
-  window.electron = electronAPI
-  window.api = api
-}
+contextBridge.exposeInMainWorld("torrentFuncts", {
+    openFolder: () => {
+        try {
+            return ipcRenderer.invoke("open-folder")
+        } catch(err) {
+            console.error("Preload openFolder error: ", err);
+            throw err;
+        }
+    },
+    downloadTorrent: (magnetURI, folderPath) => {
+        try {
+            return ipcRenderer.invoke("download-torrent", magnetURI, folderPath);
+        } catch (err) {
+            console.error("Preload downloadTorrent error: ", err);
+            throw err;
+        }
+    },
+    getAllTorrents: () => {
+        try {
+            return ipcRenderer.invoke("get-all-torrents")
+        } catch(err) {
+            console.error("Preload getAllTorrents error: ", err);
+            throw err;
+        }
+    },
+});
