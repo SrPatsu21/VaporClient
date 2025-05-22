@@ -48,24 +48,34 @@ export default function Download() {
             <button onClick={startDownload} style={{ marginTop: "1rem" }}>
                 Download
             </button>
-
-            <table>
-                <thead>
+            <div class="overflow-x-auto p-4">
+                <table class="min-w-full table-auto text-left text-sm text-gray-700">
+                    <thead class="bg-gray-100 text-xs uppercase text-gray-500">
                     <tr>
-                        <th>Name</th>
-                        <th>Progress</th>
+                        <th class="px-4 py-2">Name</th>
+                        <th class="px-4 py-2">Actual Download</th>
+                        <th class="px-4 py-2">Download Speed</th>
+                        <th class="px-4 py-2">Time remaining</th>
+                        <th class="px-4 py-2">Seeds</th>
+                        <th class="px-4 py-2">Upload Speed</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
                     {torrents &&
                         torrents.map((torrent, index) => (
-                            <tr key={index}>
-                                <td>{torrent.name}</td>
-                                <td>{torrent.progress}%</td>
-                            </tr>
+                            <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-2 font-medium">{torrent.name}</td>
+                            <td class="px-4 py-2">{torrent.downloaded}GB of {torrent.length}GB</td>
+                            <td class="px-4 py-2">{torrent.downloadSpeed}MB/s</td>
+                            <td class="px-4 py-2">{torrent.timeRemaining} minutes</td>
+                            <td class="px-4 py-2">{torrent.numPeers}</td>
+                            <td class="px-4 py-2">{torrent.uploadSpeed}MB/s</td>
+                        </tr>
                         ))}
-                </tbody>
-            </table>
+                    
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }

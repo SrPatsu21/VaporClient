@@ -76,17 +76,14 @@ ipcMain.handle("get-all-torrents", async () => {
         if (client && client.torrents) {
             return client.torrents.map(torrent => ({
                 name: torrent.name,
-                infoHash: torrent.infoHash,
-                magnetURI: torrent.magnetURI,
+                timeRemaining: (torrent.timeRemaining / 100000).toFixed(2), // ms to m
                 progress: torrent.progress,
-                downloaded: torrent.downloaded,
-                uploaded: torrent.uploaded,
-                downloadSpeed: torrent.downloadSpeed,
-                uploadSpeed: torrent.uploadSpeed,
-                ratio: torrent.ratio,
+                downloaded: (torrent.downloaded / 1000000000).toFixed(2), // B to GB
+                downloadSpeed: (torrent.downloadSpeed / 1000000).toFixed(2), // B to MB
+                uploadSpeed: (torrent.uploadSpeed / 1000000).toFixed(2), // B to MB
                 done: torrent.done,
                 numPeers: torrent.numPeers,
-                path: torrent.path
+                length: (torrent.length / 1000000000).toFixed(2), // B to GB
               }));
         }
         return [];
@@ -95,3 +92,21 @@ ipcMain.handle("get-all-torrents", async () => {
         throw err;
     }
 });
+
+// IPC for footer download count
+ipcMain.handle("get-many-downloads", async () => {
+    try {
+        if (client && client.torrents) {
+            let count = 0;
+            client.torrents.map(( torrent ), () => {
+                if (!torrent.ready) count++;
+            })
+            console.log("count = ", count)
+            return count;
+        }
+        return 0;
+    } catch(err) {
+        console.error("get-many-downloads error: ", err);
+        throw err;
+    }
+})
