@@ -14,12 +14,11 @@ export default defineConfig({
         input: {
             preload: path.resolve(__dirname, 'src/preload/index.js'),
           },
-          // ✅ Tell Vite not to bundle WebTorrent into preload
           vitePlugins: [],
           vite: {
             build: {
               rollupOptions: {
-                external: ['webtorrent'], // ✅ Important!
+                external: ['webtorrent'],
               },
             },
           },
