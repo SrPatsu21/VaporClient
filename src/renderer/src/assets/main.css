@@ -30,3 +30,11 @@
 .custom-scrollbar_warning_color {
     scrollbar-color: var(--warning_color) var(--background_color1);
 }
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
