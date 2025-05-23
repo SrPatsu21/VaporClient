@@ -7,7 +7,7 @@ const HomePage = () => {
         const container = scrollRef.current;
         if (!container) return;
 
-        const scrollAmount = window.innerWidth + 500;
+        const scrollAmount = window.innerWidth *0.2;
         container.scrollBy({
             left: direction === "left" ? -scrollAmount : scrollAmount,
             behavior: "smooth",
@@ -28,9 +28,9 @@ const HomePage = () => {
                 {/* Scrollable Cards */}
                 <div
                     ref={scrollRef}
-                    className="flex overflow-x-auto no-scrollbar scroll-smooth space-x-4 px-12 snap-x snap-mandatory"
+                    className="flex overflow-x-auto no-scrollbar scroll-smooth space-x-4 px-12"
                 >
-                    {[...Array(10)].map((_, i) => (
+                    {[...Array(50)].map((_, i) => (
                         <div
                             key={i}
                             className="min-w-[200px] h-40 bg-white rounded-xl shadow p-4 flex-shrink-0 snap-start"
