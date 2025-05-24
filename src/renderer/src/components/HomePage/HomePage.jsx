@@ -4,8 +4,6 @@ import { API_BASE_URL } from "../../apiConfig";
 
 const HomePage = () => {
     const scrollRef = useRef(null);
-    const cardRef = useRef(null);
-    const [cardWidth, setCardWidth] = useState(0);
     const [categories, setCategories] = useState([]);
     const [titles, setTitles] = useState([]);
 
@@ -70,20 +68,13 @@ const HomePage = () => {
                         ref={scrollRef}
                         className="flex overflow-x-auto no-scrollbar scroll-smooth space-x-4"
                     >
-                        {/*{(() => {
-                            try {*/}
-                                {categories.map((category, index) => (
-                                    <Link to="/"
-                                        key={index}
-                                        className=" bg-[var(--background_color2)] hover:bg-[var(--hover_background_color2)] text-[var(--text_color1)] h-[ 1.125rem] rounded-xl p-2 px-4 flex-shrink-0 snap-start font-bold text-sm">
-                                        {category.categorySTR}
-                                    </Link>
-                                ))}{/*
-                            } catch (error) {
-                                console.error("Error rendering titles:", error);
-                                return <p className="text-red-500">Failed to load cards.</p>;
-                            }
-                        })()}*/}
+                        {categories.map((category, index) => (
+                            <Link to="/"
+                                key={index}
+                                className=" bg-[var(--background_color2)] hover:bg-[var(--hover_background_color2)] text-[var(--text_color1)] h-[ 1.125rem] rounded-xl p-2 px-4 flex-shrink-0 snap-start font-bold text-sm">
+                                {category.categorySTR}
+                            </Link>
+                        ))}
                     </div>
 
                 </div>
@@ -97,41 +88,34 @@ const HomePage = () => {
                 </button>
             </div>
             <h1 className="mb-4 mt-8 text-2xl font-bold">Recent add Titles:</h1>
-            <div className="flex flex-warp justify-around content-start">
-                {/* {(() => {
-                    try { */}
-                        {titles.map((title, index) => (
-                            <Link to="/"
-                                key={index}
-                            >
-                                <div className="min-w-[250px] max-w-[300px] bg-white rounded-xl shadow p-4 flex-shrink-0 snap-start">
-                                    <div className="w-full h-40 bg-gray-200 rounded-md overflow-hidden mb-4">
-                                        <img
-                                            src={title.imageURL || "https://via.placeholder.com/300x160?text=No+Image"}
-                                            alt={title.titleSTR}
-                                            className="w-full h-full object-cover"
-                                        />
-                                    </div>
-                                    <h3 className="text-lg font-semibold mb-1">{title.titleSTR}</h3>
-                                    <p className="text-sm text-gray-600 mb-2">Category: {title.category.categorySTR}</p>
-                                    <div className="flex flex-wrap gap-2">
-                                        {title.tags?.map((tag, idx) => (
-                                            <span
-                                                key={idx}
-                                                className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded"
-                                            >
-                                                {tag.tagSTR}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-                            </Link>
-                        ))}
-                    {/* } catch (error) {
-                        console.error("Error rendering titles:", error);
-                        return <p className="text-red-500">Failed to load cards.</p>;
-                    }
-                })} */}
+            <div className="flex flex-wrap justify-around content-start gap-4">
+                {titles.map((title, index) => (
+                    <Link to="/"
+                        key={index}
+                    >
+                        <div className="min-w-[250px] max-w-[300px] bg-white rounded-xl shadow p-4 flex-shrink-0 snap-start">
+                            <div className="w-full h-40 bg-gray-200 rounded-md overflow-hidden mb-4">
+                                <img
+                                    src={title.imageURL || "https://via.placeholder.com/300x160?text=No+Image"}
+                                    alt={title.titleSTR}
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                            <h3 className="text-lg font-semibold mb-1">{title.titleSTR}</h3>
+                            <p className="text-sm text-gray-600 mb-2">Category: {title.category.categorySTR}</p>
+                            <div className="flex flex-wrap gap-2">
+                                {title.tags?.map((tag, idx) => (
+                                    <span
+                                        key={idx}
+                                        className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded"
+                                    >
+                                        {tag.tagSTR}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    </Link>
+                ))}
             </div>
         </div>
     );
