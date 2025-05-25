@@ -8,18 +8,25 @@
     /** colors */
     --danger_color: #e54b4b;
     --hover_danger_color: #e54b4b99;
+
     --warning_color: #ffa987;
     --hover_warning_color: #ffa98799;
+
     --text_color1: #ffffff;
     --hover_text_color1: #ffffff99;
     --text_color2: #000000;
     --hover_text_color2: #00000099;
+
     --background_color1: #444140;
     --hover_background_color1: #44414099;
+    --transparent_background_color1: #4441405d;
+
     --background_color2: #575453;
     --hover_background_color2: #57545399;
+
     --background_color3: #f7ebe8;
     --hover_background_color3: #f7ebe899;
+
     --background_color4: #d9d9d9;
     --hover_background_color4: #d9d9d999;
 }

@@ -88,30 +88,19 @@ const HomePage = () => {
                 </button>
             </div>
             <h1 className="mb-4 mt-8 text-2xl font-bold">Recent add Titles:</h1>
-            <div className="flex flex-wrap justify-around content-start gap-4">
+            <div className="flex flex-wrap justify-between content-start gap-4">
                 {titles.map((title, index) => (
-                    <Link to="/"
-                        key={index}
-                    >
-                        <div className="min-w-[250px] max-w-[300px] bg-white rounded-xl shadow p-4 flex-shrink-0 snap-start">
-                            <div className="w-full h-40 bg-gray-200 rounded-md overflow-hidden mb-4">
+                    <Link to="/" key={index}>
+                        <div className="w-[300px] bg-white shadow flex-shrink-0 snap-start">
+                            <div className="w-full h-60 bg-gray-200 overflow-hidden relative">
                                 <img
                                     src={title.imageURL || "https://via.placeholder.com/300x160?text=No+Image"}
                                     alt={title.titleSTR}
                                     className="w-full h-full object-cover"
                                 />
-                            </div>
-                            <h3 className="text-lg font-semibold mb-1">{title.titleSTR}</h3>
-                            <p className="text-sm text-gray-600 mb-2">Category: {title.category.categorySTR}</p>
-                            <div className="flex flex-wrap gap-2">
-                                {title.tags?.map((tag, idx) => (
-                                    <span
-                                        key={idx}
-                                        className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded"
-                                    >
-                                        {tag.tagSTR}
-                                    </span>
-                                ))}
+                                <h3 className="absolute bottom-0 w-full w-full text-[var(--text_color1)] bg-[var(--transparent_background_color1)] opacity-100 text-lg font-semibold px-2 py-1">
+                                    {title.titleSTR}
+                                </h3>
                             </div>
                         </div>
                     </Link>
