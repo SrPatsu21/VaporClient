@@ -1,8 +1,23 @@
 import { HashRouter, Link, Routes, Route } from "react-router-dom";
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const navigate = useNavigate();
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const handleSearch = () => {
+        if (searchTerm.trim()) {
+        navigate(`/search?search=${encodeURIComponent(searchTerm.trim())}`);
+        }
+    };
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+        handleSearch();
+        }
+    };
 
     return (
         <header className="sticky top-0 bg-[var(--background_color1)] shadow-md sticky top-0 z-50 h-(100)  text-[var(--warning_color)] flex flex-row max-lg:flex-wrap justify-between items-center gap-2 content-between">
@@ -55,13 +70,15 @@ const Header = () => {
 
             <div className="lg:w-1/2 max-lg:w-full flex flex-row max-lg:flex-wrap justify-end items-center gap-4 content-between">
                 <div className="grow lg:max-w-3/6 rounded-4xl bg-[var(--background_color2)] focus-within:bg-[var(--hover_background_color2)] focus-within:text-[var(--hover_warning_color)] flex flex-row justify-between items-center">
-                    <svg width="50" height="32" viewBox="0 0 50 50" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <svg onClick={handleSearch} width="50" height="32" viewBox="0 0 50 50" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M31.25 21.875C31.25 27.0527 27.0527 31.25 21.875 31.25C16.6973 31.25 12.5 27.0527 12.5 21.875C12.5 16.6973 16.6973 12.5 21.875 12.5C27.0527 12.5 31.25 16.6973 31.25 21.875ZM29.5402 31.7498C27.4233 33.3952 24.7635 34.375 21.875 34.375C14.9714 34.375 9.375 28.7785 9.375 21.875C9.375 14.9714 14.9714 9.375 21.875 9.375C28.7785 9.375 34.375 14.9714 34.375 21.875C34.375 24.7635 33.3952 27.4233 31.7498 29.54L41.73 39.5202L39.5202 41.7298L29.5402 31.7498Z"/>
                     </svg>
-                    <input className="text-[var(--text_color1)] border-0 focus:outline-0 w-full" type="text" placeholder="Search" />
-                    <svg className="text-[var(--warning_color)] hover:text-[var(--hover_warning_color)]" width="52" height="32" viewBox="0 0 52 52" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12.3654 21.0398C11.5193 21.8859 11.5193 23.2579 12.3654 24.104L22.9652 34.6933C24.6578 36.3842 27.4004 36.3835 29.0921 34.692L39.6877 24.0962C40.534 23.2501 40.534 21.8781 39.6877 21.032C38.8417 20.1859 37.4697 20.1859 36.6236 21.032L27.5548 30.1009C26.7088 30.9472 25.3368 30.9469 24.4907 30.1009L15.4296 21.0398C14.5834 20.1937 13.2116 20.1937 12.3654 21.0398Z" />
-                    </svg>
+                    <input className="text-[var(--text_color1)] border-0 focus:outline-0 w-full" type="text" placeholder="Search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onKeyDown={handleKeyPress}/>
+                    <Link to="/search">
+                        <svg className="text-[var(--warning_color)] hover:text-[var(--hover_warning_color)]" width="52" height="32" viewBox="0 0 52 52" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12.3654 21.0398C11.5193 21.8859 11.5193 23.2579 12.3654 24.104L22.9652 34.6933C24.6578 36.3842 27.4004 36.3835 29.0921 34.692L39.6877 24.0962C40.534 23.2501 40.534 21.8781 39.6877 21.032C38.8417 20.1859 37.4697 20.1859 36.6236 21.032L27.5548 30.1009C26.7088 30.9472 25.3368 30.9469 24.4907 30.1009L15.4296 21.0398C14.5834 20.1937 13.2116 20.1937 12.3654 21.0398Z" />
+                        </svg>
+                    </Link>
                 </div>
 
                 <div class="grow relative group lg:max-w-3xs hover:text-[var(--hover_warning_color)]">

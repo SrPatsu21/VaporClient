@@ -4,6 +4,8 @@ import About from "./components/About/About";
 import Header from "./components/Header/Header";
 import HomePage from "./components/HomePage/HomePage"
 import Download from "./components/Download/Download";
+import Search from "./components/Search/Search";
+
 
 function App() {
     return (
@@ -14,6 +16,8 @@ function App() {
                 <Route path="/" element={<HomePage/>} />
                 <Route path="/about" element={<About/>} />
                 <Route path="/download" element={<Download/>} />
+                <Route path="/search" element={<Search/>} />
+
             </Routes>
 
             <footer className="h-[200vh]">
