@@ -24,7 +24,7 @@ const Header = () => {
             <div className="lg:w-1/2 max-lg:w-full flex flex-row max-lg:flex-wrap justify-between items-center gap-2 content-between">
                 <div className="relative">
                     <button onClick={() => setIsOpen(!isOpen)} className="shrink p-2 hover:text-[var(--hover_warning_color)]" >
-                        <svg width="64" height="61" viewBox="0 0 64 61" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <svg width="64" height="64" viewBox="0 0 64 64" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <path d="M4 19.0625H60V26.6875H4V19.0625Z" />
                             <path d="M4 34.3125H60V41.9375H4V34.3125Z" />
                             <path d="M4 49.5625H60V57.1875H4V49.5625Z" />
@@ -33,7 +33,7 @@ const Header = () => {
                     </button>
 
                     {isOpen && (
-                        <div className="max-lg:w-screen absolute rtf w-[20vw] min-w-min overflow-y-auto overscroll-contain custom-scrollbar custom-scrollbar_warning_color h-[100dvh] z-10 text-[var(--text_color1)] bg-[var(--background_color2)] shadow-lg p-4 flex flex-col gap-4 transition-transform duration-300">
+                        <div className="max-lg:w-screen absolute rtf w-[20vw] min-w-min overflow-y-auto overscroll-contain custom-scrollbar custom-scrollbar_warning_color h-[100dvh] z-10 text-[var(--text_color1)] bg-[var(--background_color2)] shadow-lg p-4 flex flex-col gap-4 transition-transform duration-500">
                             <Link to="/" className="text-3xl hover:underline hover:text-[var(--hover_text_color1)] p-4">Display</Link>
                             <Link to="/" className="text-3xl hover:underline hover:text-[var(--hover_text_color1)] p-4">Preferences</Link>
                             <Link to="/" className="text-3xl hover:underline hover:text-[var(--hover_text_color1)] p-4">Network</Link>

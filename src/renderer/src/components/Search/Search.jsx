@@ -1,14 +1,35 @@
 import { HashRouter, Link, Routes, Route } from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
 import { useState } from "react";
+import { useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from "../../apiConfig";
 
 const Search = () => {
+const [searchParams] = useSearchParams();
+const [query, setquery] = useState({});
 const navigate = useNavigate();
 const [params, setParams] = useState({
     name: '',
     owner: '',
     title: '',
 });
+
+const search = searchParams.get('search');
+
+
+    const fetchsimplequery = async () => {
+        try {
+            const res = await fetch(API_BASE_URL+ "/v1/othersearch/searchbyqueryall?query="+ search +"&limit=20&skip=0", {
+                headers: {
+                    Accept: "application/json",
+                },
+            });
+            const data = await res.json();
+            setquery(data || []);
+        } catch (err) {
+            console.error("Error fetching simple query:", err);
+        }
+    };
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -27,10 +48,10 @@ const [params, setParams] = useState({
         navigate(`/download?${query}`);
     };
 
+    fetchsimplequery()
     return (
-        <div className="flex h-screen">
-        {/* Left Panel (30%) */}
-            <div className="w-[30%] p-6 bg-gray-100 border-r border-gray-300">
+        <div className="flex min-h-screen">
+            <div className="w-[25%] p-6 bg-gray-100 border-r border-gray-300">
                 <h2 className="text-xl font-semibold mb-4">Search Parameters</h2>
 
                 <div className="mb-4">
@@ -77,10 +98,41 @@ const [params, setParams] = useState({
                 </button>
             </div>
 
-        {/* Right Panel (70%) */}
-            <div className="w-[70%] p-6">
-                <h1 className="text-2xl font-bold mb-4">Results Area</h1>
-                <p>Search results will appear here after redirect to `/download`.</p>
+            <div className="w-[75%] my-12 mr-20 bg-[var(--background_color3)] p-6">
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6 justify-items-center">
+                    {(query.titles || []).map((title, index) => (
+                        <Link to="/" key={index}>
+                            <div className="w-[280px] bg-white shadow flex-shrink-0 snap-start">
+                                <div className="w-full h-[420px] bg-gray-200 overflow-hidden relative">
+                                    <img
+                                        src={title.imageURL || "https://via.placeholder.com/300x160?text=No+Image"}
+                                        alt={title.titleSTR}
+                                        className="w-full h-full object-cover"
+                                    />
+                                    <h3 className="absolute bottom-0 w-full text-[var(--text_color1)] bg-[var(--transparent_background_color1)] opacity-100 text-lg font-semibold px-2 py-1">
+                                        {title.titleSTR}
+                                    </h3>
+                                </div>
+                            </div>
+                        </Link>
+                    ))}
+                    {(query.products || []).map((product, index) => (
+                        <Link to="/" key={index}>
+                            <div className="w-[280px] bg-white shadow flex-shrink-0 snap-start">
+                                <div className="w-full h-[420px] bg-gray-200 overflow-hidden relative">
+                                    <img
+                                        src={product.imageURL || "https://via.placeholder.com/300x160?text=No+Image"}
+                                        alt={product.name}
+                                        className="w-full h-full object-cover"
+                                    />
+                                    <h3 className="absolute bottom-0 w-full text-[var(--text_color1)] bg-[var(--transparent_background_color1)] opacity-100 text-lg font-semibold px-2 py-1">
+                                        {product.name}
+                                    </h3>
+                                </div>
+                            </div>
+                        </Link>
+                    ))}
+                </div>
             </div>
         </div>
     );
