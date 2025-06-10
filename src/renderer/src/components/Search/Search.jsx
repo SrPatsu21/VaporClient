@@ -31,28 +31,33 @@ const Search = () => {
     const search = searchParams.get('search');
 
     useEffect(() => {
-        // fetchsimplequery();
+        fetchsimplequery(search);
     }, []);
 
-    // const fetchsimplequery = async () => {
-    //     try {
-    //         const res = await fetch(`${API_BASE_URL}/v1/othersearch/searchbyqueryall?query=${search}&limit=20&skip=0`);
-    //         const data = await res.json();
-    //         setquery(data || {});
-    //     } catch (err) {
-    //         console.error("Error fetching simple query:", err);
-    //     }
-    // };
+    const fetchsimplequery = async (name) => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/v1/othersearch/searchbyqueryall?query=${name}&limit=20&skip=0`);
+            const data = await res.json();
+            setquery(data || {});
+        } catch (err) {
+            console.error("Error fetching simple query:", err);
+        }
+    };
 
     const handleInputChange = async (e) => {
         const { name, value } = e.target;
-        setParams((prev) => ({ ...prev, [name]: value }));
+        const field = name.replace('Input', '');
+
+        setParams((prev) => ({
+            ...prev,
+            [name]: value,
+            ...(value === '' ? { [field]: '' } : {})
+        }));
 
         if (name === 'titleInput') {
             if (value.length > 0) {
                 try {
                     const url = `${API_BASE_URL}/v1/title?titleSTR=${value}&limit=8${params.category ? `&category=${params.category}` : ''}`;
-                    console.log(url)
                     const res = await fetch(url);
                     const data = await res.json();
                     setTitleOptions(data || []);
@@ -257,6 +262,22 @@ const Search = () => {
 
             <div className="w-[75%] my-12 mr-20 bg-[var(--background_color3)] p-6">
                 <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6 justify-items-center">
+                    {(query.titles || []).map((title, index) => (
+                        <Link to="/" key={index}>
+                            <div className="w-[280px] bg-white shadow flex-shrink-0 snap-start">
+                                <div className="w-full h-[420px] bg-gray-200 overflow-hidden relative">
+                                    <img
+                                        src={title.imageURL || "https://via.placeholder.com/300x160?text=No+Image"}
+                                        alt={title.titleSTR}
+                                        className="w-full h-full object-cover"
+                                    />
+                                    <h3 className="absolute bottom-0 w-full text-[var(--text_color1)] bg-[var(--transparent_background_color1)] opacity-100 text-lg font-semibold px-2 py-1">
+                                        {title.titleSTR}
+                                    </h3>
+                                </div>
+                            </div>
+                        </Link>
+                    ))}
                     {(query.products || []).map((product, index) => (
                         <Link to="/" key={index}>
                             <div className="w-[280px] bg-white shadow flex-shrink-0 snap-start">
