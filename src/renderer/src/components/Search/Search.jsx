@@ -9,7 +9,7 @@ const Search = () => {
     const [params, setParams] = useState({
         name: '',
         title: '',
-        tags: '',
+        tags: [],
         category: '',
         titleInput: '',
         tagsInput: '',
@@ -107,29 +107,56 @@ const Search = () => {
     };
 
     const selectOption = (field, option) => {
-        let inputValue = '';
-        console.log(option)
-        if (field === 'title') inputValue = option.titleSTR;
-        else if (field === 'tags') inputValue = option.tagSTR;
-        else if (field === 'category') inputValue = option.categorySTR;
+        if (field === 'tags') {
+            setParams((prev) => {
+                if (prev.tags.some((t) => t._id === option._id)) return prev;
+                return {
+                    ...prev,
+                    tags: [...prev.tags, { _id: option._id, tagSTR: option.tagSTR }],
+                    tagsInput: '',
+                };
+            });
+        } else {
+            let inputValue = '';
+            if (field === 'title') inputValue = option.titleSTR;
+            else if (field === 'category') inputValue = option.categorySTR;
 
+            setParams((prev) => ({
+                ...prev,
+                [`${field}Input`]: inputValue,
+                [field]: option._id,
+            }));
+        }
+    };
+
+    const removeTag = (id) => {
         setParams((prev) => ({
             ...prev,
-            [`${field}Input`]: inputValue,
-            [field]: option._id,
+            tags: prev.tags.filter((tag) => tag._id !== id),
         }));
     };
 
 
     const handleSearch = async () => {
-        const url = `${API_BASE_URL}/v1/product?name=${params.name}${params.title ? `&title=${params.title}` : ''}${params.tags ? `&tags=${params.tags}` : ''}&limit=100&skip=0`;
-        console.log(url)
+        if (params.title) {
+            const tagsParam = params.tags.length > 0 ? `&tags=${params.tags.map((t) => t._id).join(',')}` : '';
+            const url = `${API_BASE_URL}/v1/product?name=${params.name}${params.title ? `&title=${params.title}` : ''}${tagsParam}&limit=2  0&skip=0`;
 
-        console.log("🔍 Buscando produtos com:");
-        console.log("Name:", params.name);
-        console.log("Title UUID:", params.title);
-        console.log("Tag UUID:", params.tags);
-        console.log("URL final:", url);
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                setquery({ products: data });
+            } catch (err) {
+                console.error("Error fetching product search:", err);
+            }
+        }else {
+            fetchsimplequery(params.name);
+        }
+    };
+    const handleSearchParams = async (customParams = params) => {
+        const tagsParam = customParams.tags.length > 0 ? `&tags=${customParams.tags.map((t) => t._id).join(',')}` : '';
+        const url = `${API_BASE_URL}/v1/product?name=${customParams.name}${customParams.title ? `&title=${customParams.title}` : ''}${tagsParam}&limit=20&skip=0`;
+
         try {
             const res = await fetch(url);
             const data = await res.json();
@@ -251,7 +278,19 @@ const Search = () => {
                         </ul>
                     )}
                 </div>
-
+                <div className="flex flex-wrap gap-2 mb-2">
+                    {params.tags.map((tag) => (
+                        <span
+                            key={tag._id}
+                            className="bg-blue-200 text-blue-800 px-2 py-1 rounded-full flex items-center"
+                        >
+                            {tag.tagSTR}
+                            <button onClick={() => removeTag(tag._id)} className="ml-2 text-red-500 hover:text-red-700">
+                                &times;
+                            </button>
+                        </span>
+                    ))}
+                </div>
                 <button
                     onClick={handleSearch}
                     className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
@@ -261,10 +300,26 @@ const Search = () => {
             </div>
 
             <div className="w-[75%] my-12 mr-20 bg-[var(--background_color3)] p-6">
+                {Array.isArray(query.titles) && query.titles.length > 0 && (
+                    <h1 className="mb-4 text-3xl font-bold">Titles found:</h1>
+                )}
                 <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6 justify-items-center">
-                    {(query.titles || []).map((title, index) => (
-                        <Link to="/" key={index}>
-                            <div className="w-[280px] bg-white shadow flex-shrink-0 snap-start">
+                    {Array.isArray(query.titles) && query.titles.length > 0 && (
+                        (query.titles || []).map((title, index) => (
+                            <div onClick={async () =>
+                                    {
+                                        const newParams = {
+                                            ...params,
+                                            title: title._id,
+                                            titleInput: title.titleSTR,
+                                        };
+
+                                        setParams(newParams);
+                                        handleSearchParams(newParams);
+                                    }
+                                }
+                                className="w-[280px] bg-white shadow flex-shrink-0 snap-start"
+                            >
                                 <div className="w-full h-[420px] bg-gray-200 overflow-hidden relative">
                                     <img
                                         src={title.imageURL || "https://via.placeholder.com/300x160?text=No+Image"}
@@ -276,8 +331,13 @@ const Search = () => {
                                     </h3>
                                 </div>
                             </div>
-                        </Link>
-                    ))}
+                        ))
+                    )}
+                </div>
+                {Array.isArray(query.products) && query.products.length > 0 && (
+                    <h1 className="mb-4 text-3xl font-bold">Products found:</h1>
+                )}
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6 justify-items-center">
                     {(query.products || []).map((product, index) => (
                         <Link to="/" key={index}>
                             <div className="w-[280px] bg-white shadow flex-shrink-0 snap-start">
