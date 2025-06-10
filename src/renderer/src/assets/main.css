@@ -34,14 +34,30 @@
 .custom-scrollbar {
     scrollbar-width: thin;
 }
-.custom-scrollbar_warning_color {
-    scrollbar-color: var(--warning_color) var(--background_color1);
+
+.custom-scrollbar_warning_color::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.custom-scrollbar_warning_color::-webkit-scrollbar-track {
+    background: var(--background_color3);
+}
+
+.custom-scrollbar_warning_color::-webkit-scrollbar-thumb {
+    background-color: var(--warning_color);
+    border-radius: 4px;
+}
+
+.custom-scrollbar_warning_color::-webkit-scrollbar-button {
+    display: none;
 }
 
 .no-scrollbar::-webkit-scrollbar {
     display: none;
 }
+
 .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }

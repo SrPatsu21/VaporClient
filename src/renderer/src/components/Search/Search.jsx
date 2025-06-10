@@ -78,8 +78,6 @@ const Search = () => {
                 } catch (err) {
                     console.error("Error fetching tag options", err);
                 }
-            } else {
-                setTagOptions([]);
             }
         }
 
@@ -109,10 +107,13 @@ const Search = () => {
     const selectOption = (field, option) => {
         if (field === 'tags') {
             setParams((prev) => {
-                if (prev.tags.some((t) => t._id === option._id)) return prev;
+                const prevTags = Array.isArray(prev.tags) ? prev.tags : [];
+
+                if (prevTags.some((t) => t._id === option._id)) return prev;
+
                 return {
                     ...prev,
-                    tags: [...prev.tags, { _id: option._id, tagSTR: option.tagSTR }],
+                    tags: [...prevTags, { _id: option._id, tagSTR: option.tagSTR }],
                     tagsInput: '',
                 };
             });
@@ -128,6 +129,7 @@ const Search = () => {
             }));
         }
     };
+
 
     const removeTag = (id) => {
         setParams((prev) => ({
@@ -169,44 +171,31 @@ const Search = () => {
     return (
         <div className="flex min-h-screen">
             <div className="w-[25%] p-6 bg-gray-100 border-r border-gray-300">
-                <h2 className="text-xl font-semibold mb-4">Search Parameters</h2>
+                <h2 className="text-xl font-semibold mt-12 mb-4">Search Parameters</h2>
 
                 <div className="mb-4">
-                    <label className="block font-medium mb-1">Name</label>
-                    <input
-                        type="text"
-                        name="name"
-                        value={params.name}
-                        onChange={handleInputChange}
-                        className="w-full border px-3 py-2 rounded"
-                        placeholder="Enter name"
+                    <label className="block font-medium mb-1">Name:</label>
+                    <input type="text" name="name" value={params.name} onChange={handleInputChange}
+                        className="w-full border px-3 py-2 rounded" placeholder="Enter name"
                     />
                 </div>
 
                 <div className="mb-4 relative">
-                    <label className="block font-medium mb-1">Category</label>
-                    <input
-                        type="text"
-                        name="categoryInput"
-                        value={params.categoryInput}
-                        onChange={handleInputChange}
-                        onFocus={() => setCategoryVisible(true)}
-                        onBlur={() => handleBlur(categoryDropdownRef, setCategoryVisible)}
-                        className="w-full border px-3 py-2 rounded"
-                        placeholder="Enter category"
+                    <label className="block font-medium mb-1">Category:</label>
+                    <input type="text" name="categoryInput" value={params.categoryInput} onChange={handleInputChange}
+                        onFocus={() => setCategoryVisible(true)} onBlur={() => handleBlur(categoryDropdownRef, setCategoryVisible)}
+                        className="w-full border px-3 py-2 rounded" placeholder="Enter category"
                     />
                     {categoryVisible && categoryOptions.length > 0 && (
                         <ul
                             ref={categoryDropdownRef}
                             onMouseEnter={() => setCategoryVisible(true)}
                             onMouseLeave={() => setCategoryVisible(false)}
-                            className="absolute bg-white border w-full z-10 max-h-40 overflow-y-auto"
+                            className="absolute bg-[var(--background_color4)] rounded-md border w-full z-10 max-h-40 overflow-y-auto custom-scrollbar_warning_color"
                         >
                             {categoryOptions.map((option) => (
-                                <li
-                                    key={option.uuid}
-                                    onClick={() => selectOption('category', option)}
-                                    className="p-2 hover:bg-gray-200 cursor-pointer"
+                                <li key={option.uuid} onClick={() => selectOption('category', option)}
+                                    className="p-2 text-[var(--text_color2)] houver:text-[var(--hover_text_color2)] hover:bg-[var(--hover_background_color4)] cursor-pointer"
                                 >
                                     {option.categorySTR}
                                 </li>
@@ -216,7 +205,7 @@ const Search = () => {
                 </div>
 
                 <div className="mb-4 relative">
-                    <label className="block font-medium mb-1">Title</label>
+                    <label className="block font-medium mb-1">Title:</label>
                     <input
                         type="text"
                         name="titleInput"
@@ -232,13 +221,13 @@ const Search = () => {
                             ref={titleDropdownRef}
                             onMouseEnter={() => setTitleVisible(true)}
                             onMouseLeave={() => setTitleVisible(false)}
-                            className="absolute bg-white border w-full z-10 max-h-40 overflow-y-auto"
+                            className="absolute bg-[var(--background_color4)] rounded-md border w-full z-10 max-h-40 overflow-y-auto custom-scrollbar_warning_color"
                         >
                             {titleOptions.map((option) => (
                                 <li
                                     key={option.uuid}
                                     onClick={() => selectOption('title', option)}
-                                    className="p-2 hover:bg-gray-200 cursor-pointer"
+                                    className="p-2 text-[var(--text_color2)] houver:text-[var(--hover_text_color2)] hover:bg-[var(--hover_background_color4)] cursor-pointer"
                                 >
                                     {option.titleSTR}
                                 </li>
@@ -264,13 +253,13 @@ const Search = () => {
                             ref={tagsDropdownRef}
                             onMouseEnter={() => setTagsVisible(true)}
                             onMouseLeave={() => setTagsVisible(false)}
-                            className="absolute bg-white border w-full z-10 max-h-40 overflow-y-auto"
+                            className="absolute bg-[var(--background_color4)] rounded-md border w-full z-10 max-h-40 overflow-y-auto custom-scrollbar_warning_color"
                         >
                             {tagOptions.map((option) => (
                                 <li
                                     key={option.uuid}
                                     onClick={() => selectOption('tags', option)}
-                                    className="p-2 hover:bg-gray-200 cursor-pointer"
+                                    className="p-2 text-[var(--text_color2)] houver:text-[var(--hover_text_color2)] hover:bg-[var(--hover_background_color4)] cursor-pointer"
                                 >
                                     {option.tagSTR}
                                 </li>
@@ -279,13 +268,13 @@ const Search = () => {
                     )}
                 </div>
                 <div className="flex flex-wrap gap-2 mb-2">
-                    {params.tags.map((tag) => (
+                    {Array.isArray(params.tags) && params.tags.map((tag) => (
                         <span
                             key={tag._id}
-                            className="bg-blue-200 text-blue-800 px-2 py-1 rounded-full flex items-center"
+                            className="bg-[var(--background_color2)] text-[var(--warning_color)] px-2 py-1 rounded-full flex items-center"
                         >
                             {tag.tagSTR}
-                            <button onClick={() => removeTag(tag._id)} className="ml-2 text-red-500 hover:text-red-700">
+                            <button onClick={() => removeTag(tag._id)} className="ml-2 text-[var(--danger_color)] houver:text-[var(--hover_danger_color)]">
                                 &times;
                             </button>
                         </span>
@@ -293,7 +282,7 @@ const Search = () => {
                 </div>
                 <button
                     onClick={handleSearch}
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                    className="w-full text-center px-4 py-2 rounded text-[var(--text_color1)] houver:text-[var(--hover_text_color1)] bg-[var(--warning_color)] hover:bg-[var(--hover_warning_color)]"
                 >
                     Search
                 </button>
