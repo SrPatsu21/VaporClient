@@ -14,6 +14,7 @@ const Search = () => {
         titleInput: '',
         tagsInput: '',
         categoryInput: '',
+        page: 0,
     });
 
     const [titleOptions, setTitleOptions] = useState([]);
@@ -140,29 +141,28 @@ const Search = () => {
 
 
     const handleSearch = async () => {
-        if (params.title) {
-            const tagsParam = params.tags.length > 0 ? `&tags=${params.tags.map((t) => t._id).join(',')}` : '';
-            const url = `${API_BASE_URL}/v1/product?name=${params.name}${params.title ? `&title=${params.title}` : ''}${tagsParam}&limit=2  0&skip=0`;
-
-            try {
-                const res = await fetch(url);
-                const data = await res.json();
-                setquery({ products: data });
-            } catch (err) {
-                console.error("Error fetching product search:", err);
-            }
-        }else {
-            fetchsimplequery(params.name);
-        }
-    };
-    const handleSearchParams = async (customParams = params) => {
-        const tagsParam = customParams.tags.length > 0 ? `&tags=${customParams.tags.map((t) => t._id).join(',')}` : '';
-        const url = `${API_BASE_URL}/v1/product?name=${customParams.name}${customParams.title ? `&title=${customParams.title}` : ''}${tagsParam}&limit=20&skip=0`;
+        const tagsParam = params.tags.length > 0 ? `&tags=${params.tags.map((t) => t._id).join(',')}` : '';
+        const url = `${API_BASE_URL}/v1/othersearch/searchbytitleandcategory?name=${params.name}${params.title ? `&title=${params.title}` : ''}${params.category ? `&category=${params.category}` : ''}${tagsParam}&limit=20&skip=${params.page*20}`;
+        console.log("url 1:" + url)
 
         try {
             const res = await fetch(url);
             const data = await res.json();
-            setquery({ products: data });
+            setquery(data);
+        } catch (err) {
+            console.error("Error fetching product search:", err);
+        }
+    };
+
+    const handleSearchParams = async (customParams = params) => {
+        const tagsParam = customParams.tags.length > 0 ? `&tags=${customParams.tags.map((t) => t._id).join(',')}` : '';
+        const url = `${API_BASE_URL}/v1/othersearch/searchbytitleandcategory?name=${customParams.name}${customParams.title ? `&title=${customParams.title}` : ''}${customParams.category ? `&category=${customParams.category}` : ''}${tagsParam}&limit=20&skip=${customParams.page*20}`;
+        console.log("url 2:" + url)
+
+        try {
+            const res = await fetch(url);
+            const data = await res.json();
+            setquery(data);
         } catch (err) {
             console.error("Error fetching product search:", err);
         }
