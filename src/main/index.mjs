@@ -146,7 +146,7 @@ ipcMain.handle("get-all-torrents", async () => {
         if (client && client.torrents) {
             return client.torrents.map((torrent) => ({
                 name: torrent.name,
-                ready: torrent.ready,
+                done: torrent.done,
                 magnetURI: torrent.magnetURI,
                 timeRemaining: (torrent.timeRemaining / 100000).toFixed(2), // ms to m
                 progress: torrent.progress,

@@ -106,9 +106,9 @@ export default function Download() {
                                     <td className="px-4 py-2 font-medium">
                                         <span
                                             dangerouslySetInnerHTML={
-                                                {__html: !torrent.ready
-                                                    ? readyIcon
-                                                    : downloadingIcon}
+                                                {__html: torrent.done == false
+                                                    ? downloadingIcon
+                                                    : readyIcon}
                                             }
                                         ></span>
                                     </td>
