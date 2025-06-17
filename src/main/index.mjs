@@ -167,14 +167,14 @@ ipcMain.handle("get-all-torrents", async () => {
 
 // IPC for footer download count
 ipcMain.handle("get-many-downloads", async () => {
+
     try {
         if (client && client.torrents) {
             let count = 0;
-            client.torrents.map(torrent, () => {
-                count++;
-                // if (!torrent.ready) count++;
+            console.log(client.torrents);
+            client.torrents.map(torrent => {
+                if (!torrent.done) count++;
             });
-            console.log("count = ", count);
             return count;
         }
         return 0;

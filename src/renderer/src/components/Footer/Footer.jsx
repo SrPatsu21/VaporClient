@@ -1,14 +1,18 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Footer() {
     const [ count, setCount ] = useState(0);
 
-    const getCountDownloads = async () => {
-        const count = await window.torrentFuncts.getManyDownloads();
-        setCount(count);
-    }
-    getCountDownloads
+    useEffect(() => {
+            const getCountDownloads = async () => {
+                setCount(await window.torrentFuncts.getManyDownloads());
+            }
+    
+            const interval = setInterval(getCountDownloads, 1000);
+    
+            return () => clearInterval(interval);
+        }, []);
     return (
         <footer className="bg-[var(--background_color1)] flex justify-center py-8 sticky bottom-0 z-20">
             <Link to="/download#main">
