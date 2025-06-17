@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import MessageModal from "../MessageModal/MessageModal";
 
 export default function Download() {
     const [magnetURI, setMagnetURI] = useState("");
     const [folderPath, setFolderPath] = useState("");
     const [torrents, setTorrents] = useState([]);
-    const [modalMessage, setModalMessage] = useState("");
-    const [showModalMessage, setShowModalMessage] = useState(false);
+    const messageModalRef = useRef();
 
     useEffect(() => {
         const saved = localStorage.getItem("downloadFolder");
@@ -33,18 +32,13 @@ export default function Download() {
 
         const interval = setInterval(getTorrents, 1000);
 
-        return () => clearInterval(interval);   
+        return () => clearInterval(interval);
     }, []);
 
     const removeActualTorrent = async (torrentID) => {
         const data = await window.torrentFuncts.removeTorrent(torrentID);
-        console.log("TorrentId remove: ", data);
-        setModalMessage(data.message);
-        setShowModalMessage(true);
-
-        setTimeout(() => {
-            setShowModalMessage(false);
-        }, 5000);
+        console.log("TorrentId remove: ", typeof data, " and: ", data);
+        messageModalRef.current.showModal("Remove torrent!", data);
     };
 
     const devButtonStartDownload = async () => {
@@ -54,19 +48,23 @@ export default function Download() {
         );
         await setFolderPath("/home/goiaba07/Documentos/temp");
     };
+
     const devButtonRemoveMessage = async () => {
         const message = "Torrent.name removed";
-        setModalMessage(message);
-        setShowModalMessage(true);
+        messageModalRef.current.showModal("Remove torrent!", message);
+    };
 
-        setTimeout(() => {
-            setShowModalMessage(false);
-        }, 5000);
-    }
+    const downloadingIcon = `<svg width="34px" height="34px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M19 15V17C19 18.1046 18.1046 19 17 19H7C5.89543 19 5 18.1046 5 17V15M12 5V15M12 15L10 13M12 15L14 13" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`;
+
+    const readyIcon = `<svg width="34px" height="34px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 12.6111L8.92308 17.5L20 6.5" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`;
 
     return (
         <div style={{ padding: "1rem" }}>
-            {showModalMessage && <MessageModal title="Remove Torrent" message={modalMessage} />}
+            <MessageModal ref={messageModalRef} />
             <h1>Electron Torrent Downloader TESTER</h1>
             <input
                 type="text"
@@ -80,21 +78,18 @@ export default function Download() {
             <button onClick={startDownload} className="mt-1 mx-1">
                 Download
             </button>
-            <button
-                onClick={devButtonStartDownload}
-                className="mt-1 mx-1"
-            >
+            <button onClick={devButtonStartDownload} className="mt-1 mx-1">
                 DevDownload
                 {/* DEV ONLY */}
             </button>
-            <button onClick={devButtonRemoveMessage}
-            className="mt-1 mx-1">
+            <button onClick={devButtonRemoveMessage} className="mt-1 mx-1">
                 DevModalMessageTest
             </button>
             <div className="overflow-x-auto p-4">
                 <table className="min-w-full table-auto text-left text-sm text-gray-700">
                     <thead className="bg-gray-100 text-xs uppercase text-gray-500">
                         <tr>
+                            <th className="px-4 py-2"></th>
                             <th className="px-4 py-2">Name</th>
                             <th className="px-4 py-2">Actual Download</th>
                             <th className="px-4 py-2">Download Speed</th>
@@ -108,6 +103,15 @@ export default function Download() {
                         {torrents &&
                             torrents.map((torrent) => (
                                 <tr className="hover:bg-gray-50">
+                                    <td className="px-4 py-2 font-medium">
+                                        <span
+                                            dangerouslySetInnerHTML={
+                                                {__html: !torrent.ready
+                                                    ? readyIcon
+                                                    : downloadingIcon}
+                                            }
+                                        ></span>
+                                    </td>
                                     <td className="px-4 py-2 font-medium">
                                         {torrent.name}
                                     </td>

@@ -90,15 +90,15 @@ app.on("window-all-closed", () => {
         "torrents-download-ongoing.json"
     );
     const data = JSON.stringify(dataTorrents);
-    fs.writeFileSync(filePath, data, "utf-8", (err) => {
-        if (err) {
-            console.error("Failed to save torrents:", err);
-        } else {
-            console.log("File saved");
-        }
-    });
+    try {
+        fs.writeFileSync(filePath, data, "utf-8");
+        console.log("File saved");
+    } catch (err) {
+        console.error("Failed to save torrents:", err);
+    }
 
-    // destroy client
+
+    // TODO: destroy client
 
     console.log("window all closed");
     if (process.platform !== "darwin") {
@@ -146,6 +146,7 @@ ipcMain.handle("get-all-torrents", async () => {
         if (client && client.torrents) {
             return client.torrents.map((torrent) => ({
                 name: torrent.name,
+                ready: torrent.ready,
                 magnetURI: torrent.magnetURI,
                 timeRemaining: (torrent.timeRemaining / 100000).toFixed(2), // ms to m
                 progress: torrent.progress,
@@ -190,7 +191,8 @@ ipcMain.handle("destroy-torrent", async (event, torrentID) => {
             const torrentName = (await client.get(torrentID)).name;
             client.remove(torrentID);
             console.log("Destroy torrent ", torrentName)
-            return JSON.stringify({ message: `${torrentName} removed with success!`});
+            return `${torrentName} remove with success!`;
+            // return JSON.stringify({ message: `${torrentName} removed with success!`});
         }
     } catch (err) {
         console.error("destroy-torrent error: ", err);

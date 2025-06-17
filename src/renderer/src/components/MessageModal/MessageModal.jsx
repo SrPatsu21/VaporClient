@@ -1,35 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React, {
+    useImperativeHandle,
+    forwardRef,
+    useState,
+    useEffect,
+} from "react";
 
-export default function MessageModal({ message, title }) {
-    const [showModal, setShowModal] = useState(false);
-    const [isVisible, setIsVisible] = useState(false);
+const MessageModal = forwardRef((props, ref) => {
+    const [visible, setVisible] = useState(false);
+    const [message, setMessage] = useState("");
+    const [title, setTitle] = useState("");
+    const [animClass, setAnimClass] = useState("");
 
-    useEffect(() => {
-        setShowModal(true);
-        setTimeout(() => setIsVisible(true), 50); // delay to trigger transition
+    useImperativeHandle(ref, () => ({
+        showModal(newTitle, newMessage) {
+            setTitle(newTitle);
+            setMessage(newMessage);
+            setVisible(true);
+            setAnimClass("animate-fade-in");
 
-        const timer = setTimeout(() => {
-            setIsVisible(false); // start fade-out
-            setTimeout(() => setShowModal(false), 500); // wait for fade-out to finish
-        }, 4500);
+            setTimeout(() => {
+                setAnimClass("animate-fade-out");
+                setTimeout(() => setVisible(false), 500); // wait fade-out
+            }, 5000);
+        },
+    }));
 
-        return () => clearTimeout(timer);
-    }, []);
-
-    if (!showModal) return null;
-
-    return (
-        <div className="fixed top-4 right-4 z-50">
-            <div
-                className={`
-                    transition-all duration-500
-                    ${isVisible ? "opacity-100 blur-none" : "opacity-0 blur-sm"}
-                    bg-white rounded-xl shadow-lg p-4 w-80 backdrop-blur-md
-                `}
-            >
-                <h2 className="text-lg font-semibold mb-2">{title}</h2>
+    return visible ? (
+        <div className={`fixed top-4 right-4 z-50 ${animClass}`}>
+            <div className="bg-white/80 backdrop-blur-md p-4 rounded shadow-lg w-80 transition-all">
+                <h2 className="text-lg font-bold">{title}</h2>
                 <p className="text-sm">{message}</p>
             </div>
         </div>
-    );
-}
+    ) : null;
+});
+
+export default MessageModal;
