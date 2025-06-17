@@ -5,6 +5,8 @@ import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import HomePage from "./components/HomePage/HomePage"
 import Download from "./components/Download/Download";
+import Search from "./components/Search/Search";
+
 
 function App() {
     return (
@@ -15,6 +17,7 @@ function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/download" element={<Download />} />
+                    <Route path="/search" element={<Search/>} />
                 </Routes>
             </main>
             <Footer />

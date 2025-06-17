@@ -7,13 +7,12 @@ const HomePage = () => {
     const [categories, setCategories] = useState([]);
     const [categoryTitles, setCategoryTitles] = useState({});
 
+    // Fetch categories only once
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await fetch(API_BASE_URL+ "/v1/category", {
-                    headers: {
-                        Accept: "application/json",
-                    },
+                const res = await fetch(`${API_BASE_URL}/v1/category`, {
+                    headers: { Accept: "application/json" },
                 });
                 const data = await res.json();
                 setCategories(data || []);
@@ -21,45 +20,39 @@ const HomePage = () => {
                 console.error("Error fetching categories:", err);
             }
         };
-        const fetchTitles = async (categoryId) => {
+
+        fetchCategories();
+    }, []);
+
+    // When categories change, fetch titles for each one by one
+    useEffect(() => {
+        const fetchTitlesForCategory = async (categoryId) => {
             try {
                 const queryParams = new URLSearchParams({ limit: 12 });
-
-                if (categoryId) {
-                    queryParams.append("category", categoryId);
-                }
+                queryParams.append("category", categoryId);
 
                 const res = await fetch(`${API_BASE_URL}/v1/title?${queryParams.toString()}`, {
-                    headers: {
-                        Accept: "application/json",
-                    },
+                    headers: { Accept: "application/json" },
                 });
 
                 const data = await res.json();
-                return data || [];
+
+                setCategoryTitles(prev => ({
+                    ...prev,
+                    [categoryId]: data || [],
+                }));
             } catch (err) {
-                console.error("Error fetching titles:", err);
-                return [];
+                console.error(`Error fetching titles for category ${categoryId}:`, err);
             }
         };
 
-        const loadTitles = async () => {
-            const titlesByCategory = {};
-
-            for (const category of categories) {
-                const data = await fetchTitles(category._id);
-                titlesByCategory[category._id] = data;
+        // Fetch titles one by one
+        categories.forEach((category) => {
+            if (!categoryTitles[category._id]) {
+                fetchTitlesForCategory(category._id);
             }
-
-            setCategoryTitles(titlesByCategory);
-        };
-
-        fetchCategories();
-        if (categories.length > 0) {
-            loadTitles();
-        }
+        });
     }, [categories]);
-
 
     const scroll = (direction, categoryId) => {
         const container = scrollRefs.current[categoryId];
@@ -71,7 +64,6 @@ const HomePage = () => {
             behavior: "smooth",
         });
     };
-
 
     return (
         <div className="m-12 mx-20 bg-[var(--background_color3)] p-6">
