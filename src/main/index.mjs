@@ -75,7 +75,7 @@ app.whenReady().then(async () => {
     await readTorrentDataFile();
 });
 
-app.on("window-all-closed", () => {
+app.on("before-quit", () => {
     // save new torrents
     let dataTorrents = [];
     if (client && client.torrents) {
@@ -97,12 +97,16 @@ app.on("window-all-closed", () => {
         console.error("Failed to save torrents:", err);
     }
 
-
     // TODO: destroy client
 
-    console.log("window all closed");
+    console.log("before-quit finish")
+})
+
+app.on("window-all-closed", () => {
+    console.log("window-all-closed");
     if (process.platform !== "darwin") {
-        app.quit(); // This is okay if 'before-quit' handles everything
+        app.quit(); // This will call before quit and then will quit the program
+        console.log("finish program");
     }
 });
 
