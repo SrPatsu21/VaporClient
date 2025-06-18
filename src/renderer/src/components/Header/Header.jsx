@@ -109,7 +109,14 @@ const Header = () => {
                                 Options
                             </div>
                         </Link>
-                        <Link to="/" className="flex items-center gap-2 px-2 py-1 text-lg hover:underline text-[var(--warning_color)] hover:text-[var(--hover_warning_color)]">
+                        <button to="/" className="flex items-center gap-2 px-2 py-1 text-lg hover:underline text-[var(--warning_color)] hover:text-[var(--hover_warning_color)]"
+                            onClick={() => {
+                                localStorage.removeItem("refreshToken");
+                                setToken(null);
+                                setTokenTime(null);
+                                console.log("I run")
+                            }}
+                        >
                             <svg width="40" height="30" viewBox="0 0 29 30" stroke="currentColor" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M11 15H27" stroke-width="3" stroke-linecap="round"/>
                                 <path d="M22 8L26.0766 12.2019C27.3078 13.4711 27.3078 15.5289 26.0766 16.7981L22 21" stroke-width="3" stroke-linecap="round"/>
@@ -119,7 +126,7 @@ const Header = () => {
                             <div>
                                 Leave
                             </div>
-                        </Link>
+                        </button>
                     </div>
                 </div>
             </div>
