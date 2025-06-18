@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog, screen } = require("electron");
 const path = require("path");
 const { join } = require("path");
+const fs = require("fs");
 
 // const WebTorrent = (await import("webtorrent")).default;
 // global.client = new WebTorrent();
@@ -36,7 +37,78 @@ function createWindow() {
     }
 }
 
-app.whenReady().then(createWindow);
+async function readTorrentDataFile() {
+    // open ongoing torrents
+    try {
+        const dataTorrents = JSON.parse(
+            fs.readFileSync(
+                path.join(
+                    app.getPath("userData"),
+                    "torrents-download-ongoing.json"
+                ),
+                "utf8"
+            )
+        );
+        if (0 != dataTorrents.length) {
+            const Client = await getClient();
+            dataTorrents.forEach((torrent) => {
+                Client.add(torrent.magnetURI, torrent.path, (torrent) => {
+                    console.log("torrent add");
+                    torrent.on("done", () => {
+                        console.log("Download finished!");
+                        // torrent.destroy();
+                    });
+
+                    torrent.on("error", (err) => {
+                        console.error("Torrent error:", err);
+                    });
+                });
+            });
+        }
+    } catch (err) {
+        console.log("open dataTorrents file error: ", err);
+    }
+}
+
+app.whenReady().then(async () => {
+    createWindow();
+    await readTorrentDataFile();
+});
+
+app.on("before-quit", () => {
+    // save new torrents
+    let dataTorrents = [];
+    if (client && client.torrents) {
+        dataTorrents = client.torrents.map((torrent) => ({
+            magnetURI: torrent.magnetURI,
+            path: torrent.path,
+        }));
+    }
+    console.log("start saving file");
+    const filePath = path.join(
+        app.getPath("userData"),
+        "torrents-download-ongoing.json"
+    );
+    const data = JSON.stringify(dataTorrents);
+    try {
+        fs.writeFileSync(filePath, data, "utf-8");
+        console.log("File saved");
+    } catch (err) {
+        console.error("Failed to save torrents:", err);
+    }
+
+    // TODO: destroy client
+
+    console.log("before-quit finish")
+})
+
+app.on("window-all-closed", () => {
+    console.log("window-all-closed");
+    if (process.platform !== "darwin") {
+        app.quit(); // This will call before quit and then will quit the program
+        console.log("finish program");
+    }
+});
 
 // IPC for folder dialog
 ipcMain.handle("open-folder", async () => {
@@ -56,8 +128,10 @@ ipcMain.handle("download-torrent", async (event, magnetURI, folderPath) => {
     try {
         const tempClient = await getClient();
         tempClient.add(magnetURI, { path: folderPath }, (torrent) => {
+            console.log("torrent add");
             torrent.on("done", () => {
                 console.log("Download finished!");
+                // torrent.destroy();
             });
 
             torrent.on("error", (err) => {
@@ -74,24 +148,72 @@ ipcMain.handle("download-torrent", async (event, magnetURI, folderPath) => {
 ipcMain.handle("get-all-torrents", async () => {
     try {
         if (client && client.torrents) {
-            return client.torrents.map(torrent => ({
+            return client.torrents.map((torrent) => ({
                 name: torrent.name,
-                infoHash: torrent.infoHash,
+                done: torrent.done,
                 magnetURI: torrent.magnetURI,
+                timeRemaining: (torrent.timeRemaining / 100000).toFixed(2), // ms to m
                 progress: torrent.progress,
-                downloaded: torrent.downloaded,
-                uploaded: torrent.uploaded,
-                downloadSpeed: torrent.downloadSpeed,
-                uploadSpeed: torrent.uploadSpeed,
-                ratio: torrent.ratio,
+                downloaded: (torrent.downloaded / 1000000000).toFixed(2), // B to GB
+                downloadSpeed: (torrent.downloadSpeed / 1000000).toFixed(2), // B to MB
+                uploadSpeed: (torrent.uploadSpeed / 1000000).toFixed(2), // B to MB
                 done: torrent.done,
                 numPeers: torrent.numPeers,
-                path: torrent.path
-              }));
+                length: (torrent.length / 1000000000).toFixed(2), // B to GB
+            }));
         }
         return [];
     } catch (err) {
         console.error("get-all-torrents error: ", err);
+        throw err;
+    }
+});
+
+// IPC for footer download count
+ipcMain.handle("get-many-downloads", async () => {
+
+    try {
+        if (client && client.torrents) {
+            let count = 0;
+            console.log(client.torrents);
+            client.torrents.map(torrent => {
+                if (!torrent.done) count++;
+            });
+            return count;
+        }
+        return 0;
+    } catch (err) {
+        console.error("get-many-downloads error: ", err);
+        throw err;
+    }
+});
+
+// IPC for destroy torrents when download/upload on download screen
+ipcMain.handle("destroy-torrent", async (event, torrentID) => {
+    try {
+        if (client && client.torrents) {
+            const torrentName = (await client.get(torrentID)).name;
+            client.remove(torrentID);
+            console.log("Destroy torrent ", torrentName)
+            return `${torrentName} remove with success!`;
+            // return JSON.stringify({ message: `${torrentName} removed with success!`});
+        }
+    } catch (err) {
+        console.error("destroy-torrent error: ", err);
+        throw err;
+    }
+});
+
+// IPC for test
+ipcMain.handle("get-single-torrent", async (event, torrentID) => {
+    try {
+        if (client && client.torrents) {
+            console.log(await client.get(torrentID));
+            return await client.get(torrentID);
+        }
+        return [];
+    } catch (err) {
+        console.error("get-single-torrent error: ", err);
         throw err;
     }
 });
