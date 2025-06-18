@@ -19,10 +19,26 @@ contextBridge.exposeInMainWorld("torrentFuncts", {
     },
     getAllTorrents: () => {
         try {
-            return ipcRenderer.invoke("get-all-torrents")
+            return ipcRenderer.invoke("get-all-torrents");;
         } catch(err) {
             console.error("Preload getAllTorrents error: ", err);
             throw err;
         }
     },
+    getManyDownloads: () => {
+        try {
+            return ipcRenderer.invoke("get-many-downloads");
+        } catch(err) {
+            console.error("Preload getManyDownloads error: ", err);
+            throw err;
+        }
+    },
+    removeTorrent: (torrentID) => {
+        try {
+            return ipcRenderer.invoke("destroy-torrent", torrentID);
+        } catch(err) {
+            console.error("Preload removeTorrent error: ", err);
+            throw err;
+        }
+    }
 });
