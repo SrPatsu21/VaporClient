@@ -58,3 +58,14 @@ export async function secureFetch(path, options = {}) {
         },
     });
 }
+
+export async function openFetch(path, options = {}) {
+    return fetch(`${API_BASE_URL}${path}`, {
+        ...options,
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            ...options.headers,
+        },
+    });
+}

@@ -10,7 +10,12 @@ import LoginOverlay from "./components/Login/LoginOverlay";
 import { getToken } from "./apiConfig";
 
 function App() {
-    const [showLogin, setShowLogin] = useState(false);
+    const [token, setToken] = useState(null);
+    const [tokenTime, setTokenTime] = useState(null);
+    const [loginOpen, setLoginOpen] = useState(false);
+
+    const openLoginOverlay = () => setLoginOpen(true);
+    const closeLoginOverlay = () => setLoginOpen(false);
 
     useEffect(() => {
         getToken();
@@ -18,14 +23,13 @@ function App() {
 
     return (
         <>
-        {showLogin && (
-            <LoginOverlay
-                onLoginSuccess={() => setShowLogin(false)}
-                onCancel={() => setShowLogin(false)}
-            />
-        )}
         <HashRouter>
-            <Header />
+            <Header
+                token={token}
+                setToken={setToken}
+                setTokenTime={setTokenTime}
+                openLoginOverlay={openLoginOverlay}
+            />
             <Routes>
                 <Route path="/" element={<HomePage/>} />
                 <Route path="/about" element={<About/>} />
@@ -33,10 +37,16 @@ function App() {
                 <Route path="/search" element={<Search/>} />
 
             </Routes>
-
             <footer className="h-[200vh]">
                 footer
             </footer>
+            {loginOpen && (
+                <LoginOverlay
+                onClose={closeLoginOverlay}
+                setToken={setToken}
+                setTokenTime={setTokenTime}
+                />
+            )}
         </HashRouter>
         </>
     );

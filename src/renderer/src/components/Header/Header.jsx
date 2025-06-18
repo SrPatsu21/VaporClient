@@ -1,8 +1,8 @@
-import { HashRouter, Link, Routes, Route } from "react-router-dom";
+import { HashRouter, Link, Routes, Route, Links } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
-const Header = () => {
+const Header = ({ token, setToken, setTokenTime, openLoginOverlay }) => {
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
@@ -17,6 +17,12 @@ const Header = () => {
         if (e.key === 'Enter') {
         handleSearch();
         }
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem("refreshToken");
+        setToken(null);
+        setTokenTime(null);
     };
 
     return (
@@ -90,15 +96,30 @@ const Header = () => {
                     </button>
 
                     <div class="absolute ltr pt-2 pb-2 w-12/12 bg-[var(--background_color1)] hidden group-hover:block z-10">
-                        <Link to="/" className="flex items-center gap-2 px-2 py-1 text-lg hover:underline text-[var(--warning_color)] hover:text-[var(--hover_warning_color)]">
-                            <svg width="40" height="40" viewBox="0 0 40 40" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M20 6.66667C16.3167 6.66667 13.3334 9.65 13.3334 13.3333C13.3334 17.0167 16.3167 20 20 20C23.6834 20 26.6667 17.0167 26.6667 13.3333C26.6667 9.65 23.6834 6.66667 20 6.66667Z" />
-                                <path d="M6.66663 30C6.66663 25.5667 15.55 23.3333 20 23.3333C24.45 23.3333 33.3333 25.5667 33.3333 30V33.3333H6.66663V30Z" />
-                            </svg>
-                            <div>
-                                My Profile
-                            </div>
-                        </Link>
+                        {token ? (
+                            <Link to="/" className="flex items-center gap-2 px-2 py-1 text-lg hover:underline text-[var(--warning_color)] hover:text-[var(--hover_warning_color)]">
+                                <svg width="40" height="40" viewBox="0 0 40 40" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M20 6.66667C16.3167 6.66667 13.3334 9.65 13.3334 13.3333C13.3334 17.0167 16.3167 20 20 20C23.6834 20 26.6667 17.0167 26.6667 13.3333C26.6667 9.65 23.6834 6.66667 20 6.66667Z" />
+                                    <path d="M6.66663 30C6.66663 25.5667 15.55 23.3333 20 23.3333C24.45 23.3333 33.3333 25.5667 33.3333 30V33.3333H6.66663V30Z" />
+                                </svg>
+                                <div>
+                                    My Profile
+                                </div>
+                            </Link>
+                            ) : (
+                            <button
+                                className="flex items-center gap-2 px-2 py-1 text-lg hover:underline text-[var(--warning_color)] hover:text-[var(--hover_warning_color)]"
+                                onClick={openLoginOverlay}>
+                                <svg width="40" height="40" viewBox="0 0 40 40" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M20 6.66667C16.3167 6.66667 13.3334 9.65 13.3334 13.3333C13.3334 17.0167 16.3167 20 20 20C23.6834 20 26.6667 17.0167 26.6667 13.3333C26.6667 9.65 23.6834 6.66667 20 6.66667Z" />
+                                    <path d="M6.66663 30C6.66663 25.5667 15.55 23.3333 20 23.3333C24.45 23.3333 33.3333 25.5667 33.3333 30V33.3333H6.66663V30Z" />
+                                </svg>
+                                <div>
+                                    Login
+                                </div>
+                            </button>
+                            )
+                        }
                         <Link to="/" className="flex items-center gap-2 px-2 py-1 text-lg hover:underline text-[var(--warning_color)] hover:text-[var(--hover_warning_color)]">
                             <svg width="40" height="32" viewBox="0 0 32 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M16 10.6667C13.0544 10.6667 10.6666 13.0545 10.6666 16C10.6666 18.9456 13.0544 21.3333 16 21.3333C18.9454 21.3333 21.3333 18.9456 21.3333 16C21.3333 13.0545 18.9454 10.6667 16 10.6667ZM13.3333 16C13.3333 14.5273 14.5272 13.3333 16 13.3333C17.4728 13.3333 18.6666 14.5273 18.6666 16C18.6666 17.4728 17.4728 18.6667 16 18.6667C14.5272 18.6667 13.3333 17.4728 13.3333 16Z" />
@@ -109,24 +130,20 @@ const Header = () => {
                                 Options
                             </div>
                         </Link>
-                        <button to="/" className="flex items-center gap-2 px-2 py-1 text-lg hover:underline text-[var(--warning_color)] hover:text-[var(--hover_warning_color)]"
-                            onClick={() => {
-                                localStorage.removeItem("refreshToken");
-                                setToken(null);
-                                setTokenTime(null);
-                                console.log("I run")
-                            }}
-                        >
-                            <svg width="40" height="30" viewBox="0 0 29 30" stroke="currentColor" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M11 15H27" stroke-width="3" stroke-linecap="round"/>
-                                <path d="M22 8L26.0766 12.2019C27.3078 13.4711 27.3078 15.5289 26.0766 16.7981L22 21" stroke-width="3" stroke-linecap="round"/>
-                                <path d="M22 2H5.33333C3.49238 2 2 3.45507 2 5.25V24.75C2 26.545 3.49238 28 5.33333 28H22" stroke-width="3" stroke-linecap="round"/>
-                            </svg>
+                        {token ? (
+                            <button className="flex items-center gap-2 px-2 py-1 text-lg hover:underline text-[var(--warning_color)] hover:text-[var(--hover_warning_color)]"
+                                onClick={() => {handleLogout}}>
+                                <svg width="40" height="30" viewBox="0 0 29 30" stroke="currentColor" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M11 15H27" stroke-width="3" stroke-linecap="round"/>
+                                    <path d="M22 8L26.0766 12.2019C27.3078 13.4711 27.3078 15.5289 26.0766 16.7981L22 21" stroke-width="3" stroke-linecap="round"/>
+                                    <path d="M22 2H5.33333C3.49238 2 2 3.45507 2 5.25V24.75C2 26.545 3.49238 28 5.33333 28H22" stroke-width="3" stroke-linecap="round"/>
+                                </svg>
 
-                            <div>
-                                Leave
-                            </div>
-                        </button>
+                                <div>
+                                    Leave
+                                </div>
+                            </button>
+                        ) : null}
                     </div>
                 </div>
             </div>
