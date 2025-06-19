@@ -8,6 +8,7 @@ import HomePage from "./components/HomePage/HomePage"
 import Download from "./components/Download/Download";
 import Search from "./components/Search/Search";
 import LoginOverlay from "./components/Login/LoginOverlay";
+import Library from "./components/Library/Library";
 import { getToken } from "./apiConfig";
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
                     <Route path="/about" element={<About/>} />
                     <Route path="/download" element={<Download/>} />
                     <Route path="/search" element={<Search/>} />
+                    <Route path="/library" element={<Library/>} />
                 </Routes>
             </main>
             <Footer />
