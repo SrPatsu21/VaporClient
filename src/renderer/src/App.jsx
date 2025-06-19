@@ -6,6 +6,7 @@ import Footer from "./components/Footer/Footer";
 import HomePage from "./components/HomePage/HomePage"
 import Download from "./components/Download/Download";
 import Search from "./components/Search/Search";
+import Product from "./components/Product/Product";
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
                     <Route path="/about" element={<About />} />
                     <Route path="/download" element={<Download />} />
                     <Route path="/search" element={<Search/>} />
+                    <Route path="/product/:id" element={<Product/>} />
                 </Routes>
             </main>
             <Footer />

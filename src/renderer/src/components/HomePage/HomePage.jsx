@@ -85,7 +85,7 @@ const HomePage = () => {
 
                             {/* Scrollable Cards */}
                             {(categoryTitles[category._id] || []).map((title, index) => (
-                                <Link to="/" key={index}>
+                                <Link to={`/product/${title._id}`} key={index}>
                                     <div className="w-[280px] bg-white shadow flex-shrink-0 snap-start">
                                         <div className="w-full h-[420px] bg-gray-200 overflow-hidden relative">
                                             <img

@@ -175,7 +175,6 @@ ipcMain.handle("get-many-downloads", async () => {
     try {
         if (client && client.torrents) {
             let count = 0;
-            console.log(client.torrents);
             client.torrents.map(torrent => {
                 if (!torrent.done) count++;
             });
@@ -208,7 +207,6 @@ ipcMain.handle("destroy-torrent", async (event, torrentID) => {
 ipcMain.handle("get-single-torrent", async (event, torrentID) => {
     try {
         if (client && client.torrents) {
-            console.log(await client.get(torrentID));
             return await client.get(torrentID);
         }
         return [];
