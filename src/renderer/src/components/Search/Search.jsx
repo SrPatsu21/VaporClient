@@ -195,7 +195,7 @@ const Search = () => {
                         >
                             {categoryOptions.map((option) => (
                                 <li key={option.uuid} onClick={() => selectOption('category', option)}
-                                    className="p-2 text-[var(--text_color2)] houver:text-[var(--hover_text_color2)] hover:bg-[var(--hover_background_color4)] cursor-pointer"
+                                    className="p-2 text-[var(--text_color2)] hover:text-[var(--hover_text_color2)] hover:bg-[var(--hover_background_color4)] cursor-pointer"
                                 >
                                     {option.categorySTR}
                                 </li>
@@ -227,7 +227,7 @@ const Search = () => {
                                 <li
                                     key={option.uuid}
                                     onClick={() => selectOption('title', option)}
-                                    className="p-2 text-[var(--text_color2)] houver:text-[var(--hover_text_color2)] hover:bg-[var(--hover_background_color4)] cursor-pointer"
+                                    className="p-2 text-[var(--text_color2)] hover:text-[var(--hover_text_color2)] hover:bg-[var(--hover_background_color4)] cursor-pointer"
                                 >
                                     {option.titleSTR}
                                 </li>
@@ -259,7 +259,7 @@ const Search = () => {
                                 <li
                                     key={option.uuid}
                                     onClick={() => selectOption('tags', option)}
-                                    className="p-2 text-[var(--text_color2)] houver:text-[var(--hover_text_color2)] hover:bg-[var(--hover_background_color4)] cursor-pointer"
+                                    className="p-2 text-[var(--text_color2)] hover:text-[var(--hover_text_color2)] hover:bg-[var(--hover_background_color4)] cursor-pointer"
                                 >
                                     {option.tagSTR}
                                 </li>
@@ -274,7 +274,7 @@ const Search = () => {
                             className="bg-[var(--background_color2)] text-[var(--warning_color)] px-2 py-1 rounded-full flex items-center"
                         >
                             {tag.tagSTR}
-                            <button onClick={() => removeTag(tag._id)} className="ml-2 text-[var(--danger_color)] houver:text-[var(--hover_danger_color)]">
+                            <button onClick={() => removeTag(tag._id)} className="ml-2 text-[var(--danger_color)] hover:text-[var(--hover_danger_color)]">
                                 &times;
                             </button>
                         </span>
@@ -282,7 +282,7 @@ const Search = () => {
                 </div>
                 <button
                     onClick={handleSearch}
-                    className="w-full text-center px-4 py-2 rounded text-[var(--text_color1)] houver:text-[var(--hover_text_color1)] bg-[var(--warning_color)] hover:bg-[var(--hover_warning_color)]"
+                    className="w-full text-center px-4 py-2 rounded text-[var(--text_color1)] hover:text-[var(--hover_text_color1)] bg-[var(--warning_color)] hover:bg-[var(--hover_warning_color)]"
                 >
                     Search
                 </button>
