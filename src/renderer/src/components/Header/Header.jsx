@@ -8,9 +8,18 @@ const Header = ({ token, setToken, setTokenTime, openLoginOverlay }) => {
     const [searchTerm, setSearchTerm] = useState('');
 
     const handleSearch = () => {
-        if (searchTerm.trim()) {
-        navigate(`/search?search=${encodeURIComponent(searchTerm.trim())}`);
-        }
+        const trimmed = searchTerm.trim();
+
+        const savedParams = sessionStorage.getItem("searchState");
+        const parsed = savedParams ? JSON.parse(savedParams) : {};
+
+        const newParams = {
+            ...parsed,
+            search: trimmed,
+        };
+
+        sessionStorage.setItem("searchState", JSON.stringify(newParams));
+        navigate("/search");
     };
 
     const handleKeyPress = (e) => {

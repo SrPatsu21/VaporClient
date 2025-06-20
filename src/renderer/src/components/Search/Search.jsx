@@ -1,20 +1,25 @@
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { API_BASE_URL } from "../../apiConfig";
 
 const Search = () => {
-    const [searchParams] = useSearchParams();
     const [query, setquery] = useState({});
+    const didInitialSearch = useRef(false);
 
-    const [params, setParams] = useState({
-        name: '',
-        title: '',
-        tags: [],
-        category: '',
-        titleInput: '',
-        tagsInput: '',
-        categoryInput: '',
-        page: 0,
+    const [params, setParams] = useState(() => {
+        const saved = sessionStorage.getItem("searchState");
+        if (saved) return JSON.parse(saved);
+        return {
+            search: '',
+            name: '',
+            title: '',
+            tags: [],
+            category: '',
+            titleInput: '',
+            tagsInput: '',
+            categoryInput: '',
+            page: 0,
+        };
     });
 
     const [titleOptions, setTitleOptions] = useState([]);
@@ -29,17 +34,42 @@ const Search = () => {
     const tagsDropdownRef = useRef(null);
     const categoryDropdownRef = useRef(null);
 
-    const search = searchParams.get('search');
-
     useEffect(() => {
-        fetchsimplequery(search);
-    }, []);
+        if (didInitialSearch.current) return;
+
+        const runInitialSearch = async () => {
+            try {
+                if (params.search?.trim()) {
+                    await fetchsimplequery(params.search);
+                    setParams(prev => ({ ...prev, name: '' }));
+                } else {
+                    await handleSearch();
+                }
+            } catch (err) {
+                console.error("Erro ao executar busca inicial:", err);
+            }
+
+            didInitialSearch.current = true;
+        };
+
+        runInitialSearch();
+    }, [params]);
+
+useEffect(() => {
+    sessionStorage.setItem("searchState", JSON.stringify(params));
+}, [params]);
+
+//* Searchs
 
     const fetchsimplequery = async (name) => {
         try {
             const res = await fetch(`${API_BASE_URL}/v1/othersearch/searchbyqueryall?query=${name}&limit=20&skip=0`);
+            console.log("url 3:" + `${API_BASE_URL}/v1/othersearch/searchbyqueryall?query=${name}&limit=20&skip=0`)
+
             const data = await res.json();
             setquery(data || {});
+            didInitialSearch.current = true;
+            sessionStorage.setItem("searchState", JSON.stringify(params));
         } catch (err) {
             console.error("Error fetching simple query:", err);
         }
@@ -141,7 +171,8 @@ const Search = () => {
 
 
     const handleSearch = async () => {
-        const tagsParam = params.tags.length > 0 ? `&tags=${params.tags.map((t) => t._id).join(',')}` : '';
+        const tags = Array.isArray(params.tags) ? params.tags : [];
+        const tagsParam = tags.length > 0 ? `&tags=${tags.map(t => t._id).join(",")}` : "";
         const url = `${API_BASE_URL}/v1/othersearch/searchbytitleandcategory?name=${params.name}${params.title ? `&title=${params.title}` : ''}${params.category ? `&category=${params.category}` : ''}${tagsParam}&limit=20&skip=${params.page*20}`;
         console.log("url 1:" + url)
 
@@ -149,13 +180,16 @@ const Search = () => {
             const res = await fetch(url);
             const data = await res.json();
             setquery(data);
+            didInitialSearch.current = true;
+            sessionStorage.setItem("searchState", JSON.stringify({...params}));
         } catch (err) {
             console.error("Error fetching product search:", err);
         }
     };
 
     const handleSearchParams = async (customParams = params) => {
-        const tagsParam = customParams.tags.length > 0 ? `&tags=${customParams.tags.map((t) => t._id).join(',')}` : '';
+        const tags = Array.isArray(customParams.tags) ? customParams.tags : [];
+        const tagsParam = tags.length > 0 ? `&tags=${tags.map(t => t._id).join(",")}` : "";
         const url = `${API_BASE_URL}/v1/othersearch/searchbytitleandcategory?name=${customParams.name}${customParams.title ? `&title=${customParams.title}` : ''}${customParams.category ? `&category=${customParams.category}` : ''}${tagsParam}&limit=20&skip=${customParams.page*20}`;
         console.log("url 2:" + url)
 
@@ -163,6 +197,8 @@ const Search = () => {
             const res = await fetch(url);
             const data = await res.json();
             setquery(data);
+            didInitialSearch.current = true;
+            sessionStorage.setItem("searchState", JSON.stringify(customParams));
         } catch (err) {
             console.error("Error fetching product search:", err);
         }
@@ -299,6 +335,7 @@ const Search = () => {
                                     {
                                         const newParams = {
                                             ...params,
+                                            name: '',
                                             title: title._id,
                                             titleInput: title.titleSTR,
                                         };

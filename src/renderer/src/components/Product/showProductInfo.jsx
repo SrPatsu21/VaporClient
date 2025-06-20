@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../../apiConfig";
 
 export default function ShowProductInfo() {
@@ -7,6 +7,7 @@ export default function ShowProductInfo() {
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function fetchProduct() {
@@ -30,12 +31,12 @@ export default function ShowProductInfo() {
     if (!product) return <div className="p-6">No product found</div>;
 
     return (
-        <div className="p-8 max-w-5xl mx-auto">
+        <div className="p-8 m-12 m-20 bg-[var(--background_color3)] p-6">
             <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
             <img
                 src={product.imageURL || product.title?.imageURL || "https://via.placeholder.com/300x160?text=No+Image"}
                 alt={product.name}
-                className="w-full max-h-[400px] object-contain rounded mb-4 bg-gray-100"
+                className="w-auto object-contain rounded mb-4 bg-gray-100"
             />
             <p className="mb-2 text-lg"><strong>Description:</strong> {product.description}</p>
             <p className="mb-2 text-lg"><strong>Version:</strong> {product.version}</p>
@@ -54,15 +55,35 @@ export default function ShowProductInfo() {
 
             {product.title && (
                 <div className="mb-4">
-                    <strong>Title:</strong>
-                    <p>{product.title.titleSTR}</p>
-                    {product.title.imageURL && (
-                        <img
-                            src={product.title.imageURL}
-                            alt={product.title.titleSTR}
-                            className="w-full max-h-[300px] object-contain mt-2 rounded"
-                        />
-                    )}
+                    <Link
+                        to="/search"
+                        onClick={() => {
+                            const savedParams = sessionStorage.getItem("searchState");
+                            const parsed = savedParams ? JSON.parse(savedParams) : {};
+
+                            const newParams = {
+                                ...parsed,
+                                title: product.title._id,
+                                titleInput: product.title.titleSTR,
+                                search: '',
+                                name: '',
+                                page: 0
+                            };
+
+                            sessionStorage.setItem("searchState", JSON.stringify(newParams));
+                        }}
+                    >
+                        <h1 className="text-xl font-semibold text-blue-600 hover:underline cursor-pointer">
+                            Title: {product.title.titleSTR}
+                        </h1>
+                        {product.title.imageURL && (
+                            <img
+                                src={product.title.imageURL}
+                                alt={product.title.titleSTR}
+                                className="w-auto max-h-[300px] object-contain mt-2 rounded"
+                            />
+                        )}
+                    </Link>
                 </div>
             )}
 
@@ -70,12 +91,22 @@ export default function ShowProductInfo() {
                 <p className="mb-2"><strong>Owner:</strong> {product.owner.username}</p>
             )}
 
-            <Link
-                to="/search"
-                className="inline-block mt-4 text-blue-600 hover:underline"
-            >
-                ← Back to search
-            </Link>
+            <div className="flex justify-between">
+                <button
+                    onClick={() => navigate(-1)}
+                    className="text-center px-4 py-2 rounded text-[var(--text_color1)] hover:text-[var(--hover_text_color1)] bg-[var(--warning_color)] hover:bg-[var(--hover_warning_color)]"
+                >
+                    ← Back to search
+                </button>
+
+                <Link
+                    to=""
+                    className="text-center px-4 py-2 rounded text-[var(--text_color1)] hover:text-[var(--hover_text_color1)] bg-[var(--danger_color)] hover:bg-[var(--hover_danger_color)]"
+                >
+                    Download
+                </Link>
+            </div>
+
         </div>
     );
 }
