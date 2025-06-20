@@ -85,7 +85,26 @@ const HomePage = () => {
 
                             {/* Scrollable Cards */}
                             {(categoryTitles[category._id] || []).map((title, index) => (
-                                <Link to="/" key={index}>
+                                <Link
+                                    to="/search"
+                                    onClick={() => {
+                                        const savedParams = sessionStorage.getItem("searchState");
+                                        const parsed = savedParams ? JSON.parse(savedParams) : {};
+
+                                        const newParams = {
+                                            ...parsed,
+                                            title: title._id,
+                                            titleInput: title.titleSTR,
+                                            search: '',
+                                            name: '',
+                                            tag: [],
+                                            tagsInput: '',
+                                            page: 0
+                                        };
+
+                                        sessionStorage.setItem("searchState", JSON.stringify(newParams));
+                                    }}
+                                >
                                     <div className="w-[280px] bg-white shadow flex-shrink-0 snap-start">
                                         <div className="w-full h-[420px] bg-gray-200 overflow-hidden relative">
                                             <img
