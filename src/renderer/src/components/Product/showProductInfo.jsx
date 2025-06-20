@@ -31,16 +31,19 @@ export default function ShowProductInfo() {
     if (!product) return <div className="p-6">No product found</div>;
 
     return (
-        <div className="p-8 m-12 m-20 bg-[var(--background_color3)] p-6">
-            <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
+        <div className="p-8 m-12 text-[var(--text_color2)] m-20 bg-[var(--background_color3)] p-6">
+            <h1 className="w-full text-4xl font-semibold px-2 py-1">{product.name}</h1>
             <img
                 src={product.imageURL || product.title?.imageURL || "https://via.placeholder.com/300x160?text=No+Image"}
                 alt={product.name}
                 className="w-auto object-contain rounded mb-4 bg-gray-100"
             />
-            <p className="mb-2 text-lg"><strong>Description:</strong> {product.description}</p>
+            {product.owner && (
+                <p className="mb-2"><strong>Owner:</strong> {product.owner.username}</p>
+            )}
             <p className="mb-2 text-lg"><strong>Version:</strong> {product.version}</p>
-            <p className="mb-2 text-lg"><strong>Magnet Link:</strong> {product.magnetLink}</p>
+            <p className="mb-2 text-lg"><strong>Description:</strong> {product.description}</p>
+            <p className="mb-2 w-full text-lg overflow-x-auto whitespace-nowrap"><strong>Magnet Link:</strong> {product.magnetLink}</p>
 
             {product.tags?.length > 0 && (
                 <div className="mb-4">
@@ -54,7 +57,7 @@ export default function ShowProductInfo() {
             )}
 
             {product.title && (
-                <div className="mb-4">
+                <div className="mb-4 hover:bg-[var(--background_color4)]">
                     <Link
                         to="/search"
                         onClick={() => {
@@ -74,8 +77,9 @@ export default function ShowProductInfo() {
 
                             sessionStorage.setItem("searchState", JSON.stringify(newParams));
                         }}
+                        className=""
                     >
-                        <h1 className="text-xl font-semibold text-blue-600 hover:underline cursor-pointer">
+                        <h1 className="w-auto text-lg font-semibold px-2 py-1">
                             Title: {product.title.titleSTR}
                         </h1>
                         {product.title.imageURL && (
@@ -87,10 +91,6 @@ export default function ShowProductInfo() {
                         )}
                     </Link>
                 </div>
-            )}
-
-            {product.owner && (
-                <p className="mb-2"><strong>Owner:</strong> {product.owner.username}</p>
             )}
 
             <div className="flex justify-between">
