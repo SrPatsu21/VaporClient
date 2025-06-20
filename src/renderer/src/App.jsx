@@ -9,6 +9,7 @@ import Download from "./components/Download/Download";
 import Search from "./components/Search/Search";
 import LoginOverlay from "./components/Login/LoginOverlay";
 import { getToken } from "./apiConfig";
+import ShowProductInfo from "./components/Product/showProductInfo"
 
 function App() {
     const [token, setToken] = useState(null);
@@ -36,6 +37,7 @@ function App() {
                     <Route path="/about" element={<About/>} />
                     <Route path="/download" element={<Download/>} />
                     <Route path="/search" element={<Search/>} />
+                    <Route path="/product/:id" element={<ShowProductInfo />} />
                 </Routes>
             </main>
             <Footer />

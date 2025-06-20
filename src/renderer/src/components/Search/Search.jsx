@@ -328,7 +328,7 @@ const Search = () => {
                 )}
                 <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6 justify-items-center">
                     {(query.products || []).map((product, index) => (
-                        <Link to="/" key={index}>
+                        <Link to={`/product/${product._id}`} key={index}>
                             <div className="w-[280px] bg-white shadow flex-shrink-0 snap-start">
                                 <div className="w-full h-[420px] bg-gray-200 overflow-hidden relative">
                                     <img
