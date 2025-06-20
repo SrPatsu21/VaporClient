@@ -39,12 +39,28 @@ const Search = () => {
 
         const runInitialSearch = async () => {
             try {
+                const lastParams = sessionStorage.getItem("lastSearchParams");
+                const lastResults = sessionStorage.getItem("lastSearchResults");
+
+                if (lastParams && lastResults) {
+                    const parsedParams = JSON.parse(lastParams);
+                    const parsedResults = JSON.parse(lastResults);
+
+                    if (JSON.stringify(parsedParams) === JSON.stringify(params)) {
+                        console.log("Carregando resultado do cache");
+                        setquery(parsedResults);
+                        didInitialSearch.current = true;
+                        return;
+                    }
+                }
+
                 if (params.search?.trim()) {
                     await fetchsimplequery(params.search);
                     setParams(prev => ({ ...prev, name: '' }));
                 } else {
                     await handleSearch();
                 }
+
             } catch (err) {
                 console.error("Erro ao executar busca inicial:", err);
             }
@@ -70,6 +86,8 @@ useEffect(() => {
             setquery(data || {});
             didInitialSearch.current = true;
             sessionStorage.setItem("searchState", JSON.stringify(params));
+            sessionStorage.setItem("lastSearchParams", JSON.stringify(params));
+            sessionStorage.setItem("lastSearchResults", JSON.stringify(data));;
         } catch (err) {
             console.error("Error fetching simple query:", err);
         }
@@ -182,6 +200,8 @@ useEffect(() => {
             setquery(data);
             didInitialSearch.current = true;
             sessionStorage.setItem("searchState", JSON.stringify({...params}));
+            sessionStorage.setItem("lastSearchParams", JSON.stringify(params));
+            sessionStorage.setItem("lastSearchResults", JSON.stringify(data));;
         } catch (err) {
             console.error("Error fetching product search:", err);
         }
@@ -199,6 +219,8 @@ useEffect(() => {
             setquery(data);
             didInitialSearch.current = true;
             sessionStorage.setItem("searchState", JSON.stringify(customParams));
+            sessionStorage.setItem("lastSearchParams", JSON.stringify(customParams));
+            sessionStorage.setItem("lastSearchResults", JSON.stringify(data));;
         } catch (err) {
             console.error("Error fetching product search:", err);
         }

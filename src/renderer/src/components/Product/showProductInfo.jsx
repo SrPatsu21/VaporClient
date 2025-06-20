@@ -67,6 +67,8 @@ export default function ShowProductInfo() {
                                 titleInput: product.title.titleSTR,
                                 search: '',
                                 name: '',
+                                tag: [],
+                                tagsInput: '',
                                 page: 0
                             };
 
