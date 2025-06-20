@@ -1,10 +1,10 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 /*
  * default theme
 */
 
 :root {
-    font-family: 'Roboto';
     /** colors */
     --danger_color: #e54b4b;
     --hover_danger_color: #e54b4b99;
@@ -29,6 +29,10 @@
 
     --background_color4: #d9d9d9;
     --hover_background_color4: #d9d9d999;
+}
+
+html, body {
+    font-family: 'Roboto', sans-serif;
 }
 
 .custom-scrollbar {
