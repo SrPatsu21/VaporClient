@@ -87,7 +87,8 @@ useEffect(() => {
             didInitialSearch.current = true;
             sessionStorage.setItem("searchState", JSON.stringify(params));
             sessionStorage.setItem("lastSearchParams", JSON.stringify(params));
-            sessionStorage.setItem("lastSearchResults", JSON.stringify(data));;
+            sessionStorage.setItem("lastSearchResults", JSON.stringify(data));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         } catch (err) {
             console.error("Error fetching simple query:", err);
         }
@@ -201,7 +202,8 @@ useEffect(() => {
             didInitialSearch.current = true;
             sessionStorage.setItem("searchState", JSON.stringify({...params}));
             sessionStorage.setItem("lastSearchParams", JSON.stringify(params));
-            sessionStorage.setItem("lastSearchResults", JSON.stringify(data));;
+            sessionStorage.setItem("lastSearchResults", JSON.stringify(data));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         } catch (err) {
             console.error("Error fetching product search:", err);
         }
@@ -220,7 +222,8 @@ useEffect(() => {
             didInitialSearch.current = true;
             sessionStorage.setItem("searchState", JSON.stringify(customParams));
             sessionStorage.setItem("lastSearchParams", JSON.stringify(customParams));
-            sessionStorage.setItem("lastSearchResults", JSON.stringify(data));;
+            sessionStorage.setItem("lastSearchResults", JSON.stringify(data));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         } catch (err) {
             console.error("Error fetching product search:", err);
         }
@@ -403,6 +406,38 @@ useEffect(() => {
                         </Link>
                     ))}
                 </div>
+                {(Array.isArray(query.titles) || Array.isArray(query.products)) && (
+                    <div className="mt-10 flex justify-center items-center gap-2">
+                        <button
+                            onClick={() => {
+                                if (params.page > 0) {
+                                    const newPage = params.page - 1;
+                                    const newParams = { ...params, page: newPage };
+                                    setParams(newParams);
+                                    handleSearchParams(newParams);
+                                }
+                            }}
+                            className="px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50"
+                            disabled={params.page === 0}
+                        >
+                            Previous
+                        </button>
+                        <span className="text-lg font-medium">| {params.page + 1} |</span>
+                        <button
+                            onClick={() => {
+                                const newPage = params.page + 1;
+                                const newParams = { ...params, page: newPage };
+                                console.log(newParams);
+                                setParams(newParams);
+                                handleSearchParams(newParams);
+                            }}
+                            className="px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
+                            disabled={(query.titles?.length || query.products?.length || 0) < 20}
+                        >
+                            Next
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
