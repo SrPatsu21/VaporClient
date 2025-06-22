@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../../apiConfig";
+import MessageModal from "../MessageModal/MessageModal";
 
 export default function ShowProductInfo() {
     const { id } = useParams();
@@ -8,6 +9,7 @@ export default function ShowProductInfo() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const messageModalRef = useRef();
 
     useEffect(() => {
         async function fetchProduct() {
@@ -30,26 +32,52 @@ export default function ShowProductInfo() {
     if (error) return <div className="p-6 text-red-500">Error: {error}</div>;
     if (!product) return <div className="p-6">No product found</div>;
 
+
+    const startDownload = async () => {
+        const folder = await window.torrentFuncts.openFolder();
+        await window.torrentFuncts.downloadTorrent(
+            product.magnetLink,
+            folder
+        );
+        const message = product.name + " install";
+        messageModalRef.current.showModal("Init download torrent!", message);
+    };
+
     return (
         <div className="p-8 m-12 text-[var(--text_color2)] m-20 bg-[var(--background_color3)] p-6">
-            <h1 className="w-full text-4xl font-semibold px-2 py-1">{product.name}</h1>
+            <MessageModal ref={messageModalRef} />
+            <h1 className="w-full text-4xl font-semibold px-2 py-1">
+                {product.name}
+            </h1>
             <img
-                src={product.imageURL || product.title?.imageURL || "https://via.placeholder.com/300x160?text=No+Image"}
+                src={
+                    product.imageURL ||
+                    product.title?.imageURL ||
+                    "https://via.placeholder.com/300x160?text=No+Image"
+                }
                 alt={product.name}
                 className="w-auto object-contain rounded mb-4 bg-gray-100"
             />
             {product.owner && (
-                <p className="mb-2"><strong>Owner:</strong> {product.owner.username}</p>
+                <p className="mb-2">
+                    <strong>Owner:</strong> {product.owner.username}
+                </p>
             )}
-            <p className="mb-2 text-lg"><strong>Version:</strong> {product.version}</p>
-            <p className="mb-2 text-lg"><strong>Description:</strong> {product.description}</p>
-            <p className="mb-2 w-full text-lg overflow-x-auto whitespace-nowrap"><strong>Magnet Link:</strong> {product.magnetLink}</p>
+            <p className="mb-2 text-lg">
+                <strong>Version:</strong> {product.version}
+            </p>
+            <p className="mb-2 text-lg">
+                <strong>Description:</strong> {product.description}
+            </p>
+            <p className="mb-2 w-full text-lg overflow-x-auto whitespace-nowrap">
+                <strong>Magnet Link:</strong> {product.magnetLink}
+            </p>
 
             {product.tags?.length > 0 && (
                 <div className="mb-4">
                     <strong>Tags:</strong>
                     <ul className="list-disc list-inside">
-                        {product.tags.map(tag => (
+                        {product.tags.map((tag) => (
                             <li key={tag._id}>{tag.tagSTR}</li>
                         ))}
                     </ul>
@@ -61,21 +89,27 @@ export default function ShowProductInfo() {
                     <Link
                         to="/search"
                         onClick={() => {
-                            const savedParams = sessionStorage.getItem("searchState");
-                            const parsed = savedParams ? JSON.parse(savedParams) : {};
+                            const savedParams =
+                                sessionStorage.getItem("searchState");
+                            const parsed = savedParams
+                                ? JSON.parse(savedParams)
+                                : {};
 
                             const newParams = {
                                 ...parsed,
                                 title: product.title._id,
                                 titleInput: product.title.titleSTR,
-                                search: '',
-                                name: '',
+                                search: "",
+                                name: "",
                                 tag: [],
-                                tagsInput: '',
-                                page: 0
+                                tagsInput: "",
+                                page: 0,
                             };
 
-                            sessionStorage.setItem("searchState", JSON.stringify(newParams));
+                            sessionStorage.setItem(
+                                "searchState",
+                                JSON.stringify(newParams)
+                            );
                         }}
                         className=""
                     >
@@ -101,14 +135,13 @@ export default function ShowProductInfo() {
                     ← Back to search
                 </button>
 
-                <Link
-                    to=""
-                    className="text-center px-4 py-2 rounded text-[var(--text_color1)] hover:text-[var(--hover_text_color1)] bg-[var(--danger_color)] hover:bg-[var(--hover_danger_color)]"
+                <a
+                    onClick={startDownload}
+                    className="text-center px-4 py-2 rounded text-[var(--text_color1)] hover:text-[var(--hover_text_color1)] bg-[var(--danger_color)] hover:bg-[var(--hover_danger_color)] cursor-pointer"
                 >
                     Download
-                </Link>
+                </a>
             </div>
-
         </div>
     );
 }
