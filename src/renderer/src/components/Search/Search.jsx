@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { API_BASE_URL } from "../../apiConfig";
+import MessageModal from "../MessageModal/MessageModal";
 
 const Search = () => {
     const [query, setquery] = useState({});
@@ -33,6 +34,8 @@ const Search = () => {
     const titleDropdownRef = useRef(null);
     const tagsDropdownRef = useRef(null);
     const categoryDropdownRef = useRef(null);
+
+    const messageModalRef = useRef();
 
     useEffect(() => {
         if (didInitialSearch.current) return;
@@ -229,8 +232,19 @@ useEffect(() => {
         }
     };
 
+    async function startDownload(magnetLink, name) {
+        const folder = await window.torrentFuncts.openFolder();
+        await window.torrentFuncts.downloadTorrent(
+            magnetLink,
+            folder
+        );
+        const message = name + " install";
+        messageModalRef.current.showModal("Init download torrent!", message);
+    };
+
     return (
         <div className="flex min-h-screen">
+            <MessageModal ref={messageModalRef} />
             <div className="w-[25%] p-6 bg-gray-100 border-r border-gray-300">
                 <h2 className="text-xl font-semibold mt-12 mb-4">Search Parameters</h2>
 
@@ -390,20 +404,29 @@ useEffect(() => {
                 )}
                 <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6 justify-items-center">
                     {(query.products || []).map((product, index) => (
-                        <Link to={`/product/${product._id}`} key={index}>
-                            <div className="w-[280px] bg-white shadow flex-shrink-0 snap-start">
-                                <div className="w-full h-[420px] bg-gray-200 overflow-hidden relative">
-                                    <img
-                                        src={product.imageURL || "https://via.placeholder.com/300x160?text=No+Image"}
-                                        alt={product.name}
-                                        className="w-full h-full object-cover"
-                                    />
-                                    <h3 className="absolute bottom-0 w-full text-[var(--text_color1)] bg-[var(--transparent_background_color1)] opacity-100 text-lg font-semibold px-2 py-1">
-                                        {product.name}
-                                    </h3>
+                        <div className="w-[280px] bg-white shadow flex-shrink-0 snap-start">
+                            <div className="w-full h-[420px] bg-gray-200 overflow-hidden relative">
+                                <img
+                                    src={product.imageURL || "https://via.placeholder.com/300x160?text=No+Image"}
+                                    alt={product.name}
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="flex justify-between absolute bottom-0 w-full items-center bg-[var(--transparent_background_color1)] px-2 py-1">
+                                    <Link to={`/product/${product._id}`} key={index}>
+                                        <h3 className="text-[var(--text_color1)] text-lg font-semibold">
+                                            {product.name}
+                                        </h3>
+                                    </Link>
+                                    <a
+                                        onClick={() => startDownload(product.magnetLink, product.name)}
+                                        className="text-center px-4 py-1 rounded text-[var(--text_color1)] hover:text-[var(--hover_text_color1)] bg-[var(--danger_color)] hover:bg-[var(--hover_danger_color)] cursor-pointer"
+                                    >
+                                        Download
+                                        {console.log(product)}
+                                    </a>
                                 </div>
                             </div>
-                        </Link>
+                        </div>
                     ))}
                 </div>
                 {(Array.isArray(query.titles) || Array.isArray(query.products)) && (

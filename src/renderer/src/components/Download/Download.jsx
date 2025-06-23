@@ -2,28 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import MessageModal from "../MessageModal/MessageModal";
 
 export default function Download() {
-    const [magnetURI, setMagnetURI] = useState("");
-    const [folderPath, setFolderPath] = useState("");
     const [torrents, setTorrents] = useState([]);
     const messageModalRef = useRef();
-
-    useEffect(() => {
-        const saved = localStorage.getItem("downloadFolder");
-        if (saved) setFolderPath(saved);
-    }, []);
-
-    const pickFolder = async () => {
-        const folder = await window.torrentFuncts.openFolder();
-        if (folder) {
-            setFolderPath(folder);
-            localStorage.setItem("downloadFolder", folder);
-        }
-    };
-
-    const startDownload = async () => {
-        if (!magnetURI || !folderPath) return;
-        await window.torrentFuncts.downloadTorrent(magnetURI, folderPath);
-    };
 
     useEffect(() => {
         const getTorrents = async () => {
@@ -41,19 +21,6 @@ export default function Download() {
         messageModalRef.current.showModal("Remove torrent!", data);
     };
 
-    const devButtonStartDownload = async () => {
-        // DEV ONLY
-        await setMagnetURI(
-            "magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&tr=wss%3A%2F%2Ftracker.fastcast.nz&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2F"
-        );
-        await setFolderPath("/home/goiaba07/Documentos/temp");
-    };
-
-    const devButtonRemoveMessage = async () => {
-        const message = "Torrent.name removed";
-        messageModalRef.current.showModal("Remove torrent!", message);
-    };
-
     const downloadingIcon = `<svg width="34px" height="34px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M19 15V17C19 18.1046 18.1046 19 17 19H7C5.89543 19 5 18.1046 5 17V15M12 5V15M12 15L10 13M12 15L14 13" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>`;
@@ -65,26 +32,6 @@ export default function Download() {
     return (
         <div style={{ padding: "1rem" }}>
             <MessageModal ref={messageModalRef} />
-            <h1>Electron Torrent Downloader TESTER</h1>
-            <input
-                type="text"
-                value={magnetURI}
-                onChange={(e) => setMagnetURI(e.target.value)}
-                placeholder="Enter Magnet URI"
-                style={{ width: "100%" }}
-            />
-            <button onClick={pickFolder}>Choose Folder</button>
-            <div>{folderPath && `Save to: ${folderPath}`}</div>
-            <button onClick={startDownload} className="mt-1 mx-1">
-                Download
-            </button>
-            <button onClick={devButtonStartDownload} className="mt-1 mx-1">
-                DevDownload
-                {/* DEV ONLY */}
-            </button>
-            <button onClick={devButtonRemoveMessage} className="mt-1 mx-1">
-                DevModalMessageTest
-            </button>
             <div className="overflow-x-auto p-4">
                 <table className="min-w-full table-auto text-left text-sm text-gray-700">
                     <thead className="bg-gray-100 text-xs uppercase text-gray-500">
