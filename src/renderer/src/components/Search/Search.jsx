@@ -422,7 +422,6 @@ useEffect(() => {
                                         className="text-center px-4 py-1 rounded text-[var(--text_color1)] hover:text-[var(--hover_text_color1)] bg-[var(--danger_color)] hover:bg-[var(--hover_danger_color)] cursor-pointer"
                                     >
                                         Download
-                                        
                                     </a>
                                 </div>
                             </div>

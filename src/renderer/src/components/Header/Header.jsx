@@ -119,7 +119,7 @@ const Header = ({ token, setToken, setTokenTime, openLoginOverlay }) => {
 
                     <div class="absolute ltr pt-2 pb-2 w-12/12 bg-[var(--background_color1)] hidden group-hover:block z-10">
                         {token ? (
-                            <Link to="/" className="flex items-center gap-2 px-2 py-1 text-lg hover:underline text-[var(--warning_color)] hover:text-[var(--hover_warning_color)]">
+                            <Link to="/myprofile" className="flex items-center gap-2 px-2 py-1 text-lg hover:underline text-[var(--warning_color)] hover:text-[var(--hover_warning_color)]">
                                 <svg width="40" height="40" viewBox="0 0 40 40" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M20 6.66667C16.3167 6.66667 13.3334 9.65 13.3334 13.3333C13.3334 17.0167 16.3167 20 20 20C23.6834 20 26.6667 17.0167 26.6667 13.3333C26.6667 9.65 23.6834 6.66667 20 6.66667Z" />
                                     <path d="M6.66663 30C6.66663 25.5667 15.55 23.3333 20 23.3333C24.45 23.3333 33.3333 25.5667 33.3333 30V33.3333H6.66663V30Z" />
