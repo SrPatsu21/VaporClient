@@ -19,36 +19,60 @@ export function clearToken() {
     localStorage.removeItem("refreshToken");
 }
 
+function handleInvalidSession() {
+    clearToken();
+    window.dispatchEvent(new Event("open-login"));
+}
+
 export async function getToken() {
     const now = Date.now();
     const age = now - (tokenTime || 0);
 
     if (!token || age > 9 * 60 * 1000) {
+        console.log("no token")
         const refreshToken = localStorage.getItem("refreshToken");
-        if (!refreshToken) return null;
 
-        const res = await fetch(`${API_BASE_URL}/v1/refreshToken`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                accept: "application/json",
-            },
-            body: JSON.stringify({ refreshToken }),
-        });
+        if (!refreshToken) {
+            handleInvalidSession();
+            return null;
+        }
 
-        if (!res.ok) return null;
+        try {
+            const res = await fetch(`${API_BASE_URL}/v1/refreshtoken`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    accept: "application/json",
+                },
+                body: JSON.stringify({ refreshToken }),
+            });
 
-        const data = await res.json();
-        setToken(data.token);
-        return data.token;
+            if (!res.ok) {
+                handleInvalidSession();
+                return null;
+            }
+
+            const data = await res.json();
+            setToken(data.token);
+            return data.token;
+        } catch (err) {
+            console.error("Error on token:", err);
+            handleInvalidSession();
+            return null;
+        }
     }
 
     return token;
 }
 
 export async function secureFetch(path, options = {}) {
-    const authToken = await getToken();
-    if (!authToken) throw new Error("User not authenticated");
+    let authToken = await getToken();
+
+    if (!authToken) {
+        authToken = await waitForLogin();
+        console.log(authToken);
+        if (!authToken) throw new Error("User not authenticated after login");
+    }
 
     return fetch(`${API_BASE_URL}${path}`, {
         ...options,
@@ -56,6 +80,33 @@ export async function secureFetch(path, options = {}) {
             ...options.headers,
             Authorization: `Bearer ${authToken}`,
         },
+    });
+}
+
+function waitForLogin(timeout = 60000, interval = 100) {
+    return new Promise((resolve) => {
+        let timePassed = 0;
+
+        const checkToken = async () => {
+            const newToken = await getToken();
+            if (newToken) {
+                resolve(newToken);
+            } else if (timePassed >= timeout) {
+                resolve(null);
+            } else {
+                timePassed += interval;
+                setTimeout(checkToken, interval);
+            }
+        };
+
+        const onLogin = () => {
+            window.removeEventListener("login-success", onLogin);
+            checkToken();
+        };
+
+        window.addEventListener("login-success", onLogin);
+
+        checkToken();
     });
 }
 
