@@ -29,7 +29,6 @@ export async function getToken() {
     const age = now - (tokenTime || 0);
 
     if (!token || age > 9 * 60 * 1000) {
-        console.log("no token")
         const refreshToken = localStorage.getItem("refreshToken");
 
         if (!refreshToken) {
@@ -70,7 +69,6 @@ export async function secureFetch(path, options = {}) {
 
     if (!authToken) {
         authToken = await waitForLogin();
-        console.log(authToken);
         if (!authToken) throw new Error("User not authenticated after login");
     }
 

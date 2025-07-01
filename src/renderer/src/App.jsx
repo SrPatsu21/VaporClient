@@ -8,7 +8,8 @@ import Download from "./components/Download/Download";
 import Search from "./components/Search/Search";
 import LoginOverlay from "./components/Login/LoginOverlay";
 import ShowProductInfo from "./components/Product/showProductInfo";
-import MyProfile from "./components/Login/MyProfile";
+import MyProfile from "./components/User/MyProfile";
+import ManageProducts from "./components/User/ManageProducts";
 
 function App() {
     const [token, setToken] = useState(null);
@@ -39,7 +40,7 @@ function App() {
                     <Route path="/download" element={<Download />} />
                     <Route path="/search" element={<Search />} />
                     <Route path="/product/:id" element={<ShowProductInfo />} />
-                    <Route path="/manageproducts/:userid" element={<ShowProductInfo />} />
+                    <Route path="/manageproducts/:userid" element={<ManageProducts />} />
                     <Route path="/myprofile" element={<MyProfile />} />
                 </Routes>
             </main>

@@ -50,7 +50,7 @@ const Search = () => {
                     const parsedResults = JSON.parse(lastResults);
 
                     if (JSON.stringify(parsedParams) === JSON.stringify(params)) {
-                        console.log("Carregando resultado do cache");
+                        // console.log("Carregando resultado do cache");
                         setquery(parsedResults);
                         didInitialSearch.current = true;
                         return;
@@ -83,7 +83,7 @@ useEffect(() => {
     const fetchsimplequery = async (name) => {
         try {
             const res = await fetch(`${API_BASE_URL}/v1/othersearch/searchbyqueryall?query=${name}&limit=20&skip=0`);
-            console.log("url 3:" + `${API_BASE_URL}/v1/othersearch/searchbyqueryall?query=${name}&limit=20&skip=0`)
+            // console.log("url 3:" + `${API_BASE_URL}/v1/othersearch/searchbyqueryall?query=${name}&limit=20&skip=0`)
 
             const data = await res.json();
             setquery(data || {});
@@ -196,7 +196,7 @@ useEffect(() => {
         const tags = Array.isArray(params.tags) ? params.tags : [];
         const tagsParam = tags.length > 0 ? `&tags=${tags.map(t => t._id).join(",")}` : "";
         const url = `${API_BASE_URL}/v1/othersearch/searchbytitleandcategory?name=${params.name}${params.title ? `&title=${params.title}` : ''}${params.category ? `&category=${params.category}` : ''}${tagsParam}&limit=20&skip=${params.page*20}`;
-        console.log("url 1:" + url)
+        // console.log("url 1:" + url)
 
         try {
             const res = await fetch(url);
@@ -216,7 +216,7 @@ useEffect(() => {
         const tags = Array.isArray(customParams.tags) ? customParams.tags : [];
         const tagsParam = tags.length > 0 ? `&tags=${tags.map(t => t._id).join(",")}` : "";
         const url = `${API_BASE_URL}/v1/othersearch/searchbytitleandcategory?name=${customParams.name}${customParams.title ? `&title=${customParams.title}` : ''}${customParams.category ? `&category=${customParams.category}` : ''}${tagsParam}&limit=20&skip=${customParams.page*20}`;
-        console.log("url 2:" + url)
+        // console.log("url 2:" + url)
 
         try {
             const res = await fetch(url);
