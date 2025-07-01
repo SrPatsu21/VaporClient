@@ -12,6 +12,7 @@ export default function ManageProducts() {
         titleInput: "",
         tags: [],
         page: 0,
+        showDeleted: false,
     });
 
     const [titleOptions, setTitleOptions] = useState([]);
@@ -26,9 +27,11 @@ export default function ManageProducts() {
             const tagQuery = filters.tags.length
                 ? `&tags=${filters.tags.map((t) => t._id).join(",")}`
                 : "";
+            const deletedQuery = filters.showDeleted ? `&deleted=true` : "";
             const url = `/v1/product?name=${filters.name}&owner=${userid}${
                 filters.title ? `&title=${filters.title}` : ""
-            }${tagQuery}&limit=20&skip=${filters.page * 20}`;
+            }${tagQuery}${deletedQuery}&limit=20&skip=${filters.page * 20}`;
+
             const res = await secureFetch(url);
             const data = await res.json();
             setProducts(data);
@@ -36,6 +39,7 @@ export default function ManageProducts() {
             console.error("Error fetching products", err);
         }
     };
+
 
     const handleInputChange = async (e) => {
         const { name, value } = e.target;
@@ -107,12 +111,6 @@ export default function ManageProducts() {
 
     const handleSearchClick = () => {
         setFilters((prev) => ({ ...prev, page: 0 }));
-        fetchProducts();
-    };
-
-    const handlePageChange = (delta) => {
-        const newPage = filters.page + delta;
-        setFilters((prev) => ({ ...prev, page: newPage }));
         fetchProducts();
     };
 
@@ -191,11 +189,23 @@ export default function ManageProducts() {
                                 onClick={() => removeTag(tag._id)}
                                 className="ml-2 text-[var(--danger_color)] hover:text-[var(--hover_danger_color)]"
                             >
-                                &times;
+                                X;
                             </button>
                         </span>
                     ))}
                 </div>
+
+                <div className="flex items-center gap-2 col-span-2">
+                    <input
+                        type="checkbox"
+                        id="showDeleted"
+                        checked={filters.showDeleted}
+                        onChange={(e) => setFilters((prev) => ({ ...prev, showDeleted: e.target.checked }))}
+                        className="w-4 h-4"
+                    />
+                    <label htmlFor="showDeleted" className="text-[var(--text_color2)]">Show deleted products</label>
+                </div>
+
 
                 <div className="col-span-2">
                     <button
@@ -237,28 +247,53 @@ export default function ManageProducts() {
                                 </div>
                             </div>
                             <div className="flex justify-between items-center mt-4">
-                                <button
-                                    onClick={async () => {
-                                        try {
-                                            const res = await secureFetch(`/v1/product/${product._id}`, {
-                                                method: "DELETE",
-                                            });
-                                            if (res.ok) {
-                                                setProducts(prev => prev.filter(p => p._id !== product._id));
-                                            } else {
-                                                const errData = await res.json();
-                                                console.error("Erro ao remover:", errData);
+                                {filters.showDeleted ? (
+                                    <button
+                                        onClick={async () => {
+                                            try {
+                                                const res = await secureFetch(`/v1/product/${product._id}/restore`, {
+                                                    method: "PATCH",
+                                                });
+                                                if (res.ok) {
+                                                    fetchProducts(); // revalida
+                                                } else {
+                                                    const errData = await res.json();
+                                                    console.error("Erro ao restaurar:", errData);
+                                                    alert("Erro ao restaurar produto.");
+                                                }
+                                            } catch (err) {
+                                                console.error("Erro na requisição PATCH:", err);
+                                                alert("Erro ao restaurar produto.");
+                                            }
+                                        }}
+                                        className="bg-[var(--warning_color)] hover:bg-[var(--hover_warning_color)] text-[var(--text_color2)] px-3 py-1 rounded"
+                                    >
+                                        Restaurar
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={async () => {
+                                            try {
+                                                const res = await secureFetch(`/v1/product/${product._id}`, {
+                                                    method: "DELETE",
+                                                });
+                                                if (res.ok) {
+                                                    fetchProducts(); // revalida
+                                                } else {
+                                                    const errData = await res.json();
+                                                    console.error("Erro ao remover:", errData);
+                                                    alert("Erro ao remover produto.");
+                                                }
+                                            } catch (err) {
+                                                console.error("Erro na requisição DELETE:", err);
                                                 alert("Erro ao remover produto.");
                                             }
-                                        } catch (err) {
-                                            console.error("Erro na requisição DELETE:", err);
-                                            alert("Erro ao remover produto.");
-                                        }
-                                    }}
-                                    className="bg-[var(--danger_color)] hover:bg-[var(--hover_danger_color)] text-[var(--text_color1)] px-3 py-1 rounded"
-                                >
-                                    Remover
-                                </button>
+                                        }}
+                                        className="bg-[var(--danger_color)] hover:bg-[var(--hover_danger_color)] text-[var(--text_color1)] px-3 py-1 rounded"
+                                    >
+                                        Remover
+                                    </button>
+                                )}
                                 <span className="text-xs text-[var(--hover_text_color2)]">v{product.version}</span>
                             </div>
                         </div>
