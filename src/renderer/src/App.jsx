@@ -39,6 +39,7 @@ function App() {
                     <Route path="/download" element={<Download />} />
                     <Route path="/search" element={<Search />} />
                     <Route path="/product/:id" element={<ShowProductInfo />} />
+                    <Route path="/manageproducts/:userid" element={<ShowProductInfo />} />
                     <Route path="/myprofile" element={<MyProfile />} />
                 </Routes>
             </main>

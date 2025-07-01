@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { secureFetch } from "../../apiConfig";
 
 export default function MyProfile() {
@@ -129,42 +129,29 @@ export default function MyProfile() {
             </div>
 
             <div className="flex flex-wrap gap-4 mb-8">
+                <Link to={`/manageproducts/${user._id}`}
+                    className="bg-[var(--background_color1)] text-[var(--text_color1)] px-4 py-2 rounded-lg hover:bg-[var(--hover_background_color1)] transition-colors"
+                >
+                    Manage Products
+                </Link>
+
                 <button
                     onClick={toggleEditMode}
-                    style={{
-                        backgroundColor: 'var(--background_color1)',
-                        color: 'var(--text_color1)',
-                        padding: '0.5rem 1rem',
-                        borderRadius: '8px'
-                    }}
-                    onMouseOver={(e) => e.target.style.backgroundColor = 'var(--hover_background_color1)'}
-                    onMouseOut={(e) => e.target.style.backgroundColor = 'var(--background_color1)'}
+                    className="bg-[var(--background_color1)] text-[var(--text_color1)] px-4 py-2 rounded-lg hover:bg-[var(--hover_background_color1)] transition-colors"
                 >
                     {editMode ? "Cancel Edit" : "Edit Profile"}
                 </button>
+
                 <button
                     onClick={togglePasswordMode}
-                    style={{
-                        backgroundColor: 'var(--warning_color)',
-                        color: 'var(--text_color2)',
-                        padding: '0.5rem 1rem',
-                        borderRadius: '8px'
-                    }}
-                    onMouseOver={(e) => e.target.style.backgroundColor = 'var(--hover_warning_color)'}
-                    onMouseOut={(e) => e.target.style.backgroundColor = 'var(--warning_color)'}
+                    className="bg-[var(--warning_color)] text-[var(--text_color2)] px-4 py-2 rounded-lg hover:bg-[var(--hover_warning_color)] transition-colors"
                 >
                     {passwordMode ? "Cancel Password" : "Change Password"}
                 </button>
+
                 <button
                     onClick={handleSoftDelete}
-                    style={{
-                        backgroundColor: 'var(--danger_color)',
-                        color: 'var(--text_color1)',
-                        padding: '0.5rem 1rem',
-                        borderRadius: '8px'
-                    }}
-                    onMouseOver={(e) => e.target.style.backgroundColor = 'var(--hover_danger_color)'}
-                    onMouseOut={(e) => e.target.style.backgroundColor = 'var(--danger_color)'}
+                    className="bg-[var(--danger_color)] text-[var(--text_color1)] px-4 py-2 rounded-lg hover:bg-[var(--hover_danger_color)] transition-colors"
                 >
                     Delete Account
                 </button>
