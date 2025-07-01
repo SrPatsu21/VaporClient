@@ -9,10 +9,7 @@ export default function LoginOverlay({ onClose, setToken, setTokenTime }) {
     const [error, setError] = useState("");
     const [isCreatingAccount, setIsCreatingAccount] = useState(false);
 
-    useEffect(() => {
-        setError("");
-    }, [username, password, email, passwordConfirmation, isCreatingAccount]);
-
+    
     async function handleLogin(e) {
         e.preventDefault();
 

@@ -363,7 +363,7 @@ useEffect(() => {
                 </button>
             </div>
 
-            <div className="w-[75%] my-12 mr-20 bg-[var(--background_color3)] p-6">
+            <div className="w-[75%] my-12 mr-20 bg-[var(--background_color3)] p-6 shadow-xl">
                 {Array.isArray(query.titles) && query.titles.length > 0 && (
                     <h1 className="mb-4 text-3xl font-bold">Titles found:</h1>
                 )}
@@ -439,7 +439,7 @@ useEffect(() => {
                                     handleSearchParams(newParams);
                                 }
                             }}
-                            className="px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50"
+                            className="px-4 py-2 text-[var(--text_color1)] hover:bg-[var(--hover_background_color2)] disabled:opacity-50"
                             disabled={params.page === 0}
                         >
                             Previous
@@ -452,7 +452,7 @@ useEffect(() => {
                                 setParams(newParams);
                                 handleSearchParams(newParams);
                             }}
-                            className="px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
+                            className="px-4 py-2 text-[var(--text_color1)] hover:bg-[var(--hover_background_color2)] disabled:opacity-50"
                             disabled={(query.titles?.length || query.products?.length || 0) < 20}
                         >
                             Next

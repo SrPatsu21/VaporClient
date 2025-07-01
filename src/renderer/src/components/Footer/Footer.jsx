@@ -14,7 +14,7 @@ export default function Footer() {
             return () => clearInterval(interval);
         }, []);
     return (
-        <footer className="bg-[var(--background_color1)] flex justify-center py-4 sticky bottom-0 z-20">
+        <footer className="bg-[var(--background_color1)] flex justify-center py-4 fixed left-0 bottom-0 w-full z-50">
             <Link to="/download#main">
                 <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path className="fill-[var(--warning_color)]" d="M17.7843 23.3836C17.583 23.6038 17.2985 23.7292 17.0002 23.7292C16.7018 23.7292 16.4174 23.6038 16.216 23.3836L10.5494 17.1857C10.1534 16.7526 10.1835 16.0806 10.6166 15.6846C11.0496 15.2887 11.7217 15.3187 12.1177 15.7518L15.9377 19.9299V4.25C15.9377 3.6632 16.4134 3.1875 17.0002 3.1875C17.587 3.1875 18.0627 3.6632 18.0627 4.25V19.9299L21.8827 15.7518C22.2787 15.3187 22.9507 15.2887 23.3838 15.6846C23.8169 16.0806 23.8469 16.7526 23.451 17.1857L17.7843 23.3836Z"/>

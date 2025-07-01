@@ -33,7 +33,7 @@ function App() {
                 setTokenTime={setTokenTime}
                 openLoginOverlay={openLoginOverlay}
             />
-            <main className="min-h-screen">
+            <main className="pb-20">
                 <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/about" element={<About />} />

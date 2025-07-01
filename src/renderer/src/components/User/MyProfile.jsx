@@ -117,7 +117,7 @@ export default function MyProfile() {
     if (error) return <div style={{ color: 'var(--danger_color)' }}>Error: {error}</div>;
 
     return (
-        <div className="p-8 m-12 bg-[var(--background_color3)] text-[var(--text_color2)] rounded-xl shadow-xl">
+        <div className="p-8 m-12 bg-[var(--background_color3)] text-[var(--text_color2)] shadow-xl">
             <h1 className="text-3xl font-bold mb-6">My Profile</h1>
 
             <div className="p-6 rounded-xl mb-6" style={{ backgroundColor: 'var(--background_color4)' }}>

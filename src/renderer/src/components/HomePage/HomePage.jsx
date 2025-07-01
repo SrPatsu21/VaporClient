@@ -66,7 +66,7 @@ const HomePage = () => {
     };
 
     return (
-        <div className="m-12 mx-20 bg-[var(--background_color3)] p-6">
+        <div className="m-12 mx-20 text-[var(--text_color2)] bg-[var(--background_color3)] p-6 shadow-xl">
             {categories.map((category) => (
                 <div key={category._id}>
                     <h1 className="mb-4 text-3xl h-full font-bold">Recent {category.categorySTR}:</h1>

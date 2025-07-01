@@ -44,7 +44,7 @@ export default function ShowProductInfo() {
     };
 
     return (
-        <div className="p-8 m-12 text-[var(--text_color2)] m-20 bg-[var(--background_color3)] p-6">
+        <div className="p-8 m-12 text-[var(--text_color2)] m-20 bg-[var(--background_color3)] p-6 shadow-xl">
             <MessageModal ref={messageModalRef} />
             <h1 className="w-full text-4xl font-semibold px-2 py-1">
                 {product.name}

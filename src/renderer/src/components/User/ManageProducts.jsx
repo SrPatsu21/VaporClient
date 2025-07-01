@@ -117,7 +117,7 @@ export default function ManageProducts() {
     };
 
     return (
-        <div className="min-h-screen p-6">
+        <div className="p-8 m-12 bg-[var(--background_color3)] text-[var(--text_color2)] shadow-xl">
             <MessageModal ref={messageModalRef} />
             <h1 className="text-2xl font-bold mb-4">Your Products</h1>
 
@@ -129,7 +129,7 @@ export default function ManageProducts() {
                     placeholder="Product name"
                     value={filters.name}
                     onChange={handleInputChange}
-                    className="border px-3 py-2 rounded w-full"
+                    className="border px-3 py-2 rounded w-full bg-[var(--background_color4)] text-[var(--text_color2)]"
                 />
                 <div className="relative">
                     <input
@@ -140,18 +140,18 @@ export default function ManageProducts() {
                         onFocus={() => setTitleVisible(true)}
                         onBlur={() => handleBlur(titleDropdownRef, setTitleVisible)}
                         placeholder="Search title"
-                        className="border px-3 py-2 rounded w-full"
+                        className="border px-3 py-2 rounded w-full bg-[var(--background_color4)] text-[var(--text_color2)]"
                     />
                     {titleVisible && titleOptions.length > 0 && (
                         <ul
                             ref={titleDropdownRef}
-                            className="absolute bg-white border w-full z-10 max-h-40 overflow-y-auto"
+                            className="absolute bg-[var(--background_color4)] border w-full z-10 max-h-40 overflow-y-auto"
                         >
                             {titleOptions.map((option) => (
                                 <li
                                     key={option._id}
                                     onClick={() => selectTitle(option)}
-                                    className="p-2 hover:bg-gray-200 cursor-pointer"
+                                    className="p-2 hover:bg-[var(--hover_background_color4)] cursor-pointer"
                                 >
                                     {option.titleSTR}
                                 </li>
@@ -166,15 +166,15 @@ export default function ManageProducts() {
                         placeholder="Search tags"
                         value={tagInput}
                         onChange={(e) => handleTagSearch(e.target.value)}
-                        className="border px-3 py-2 rounded w-full"
+                        className="border px-3 py-2 rounded w-full bg-[var(--background_color4)] text-[var(--text_color2)]"
                     />
                     {tagOptions.length > 0 && (
-                        <ul className="absolute bg-white border w-full z-10 max-h-40 overflow-y-auto">
+                        <ul className="absolute bg-[var(--background_color4)] border w-full z-10 max-h-40 overflow-y-auto">
                             {tagOptions.map((tag) => (
                                 <li
                                     key={tag._id}
                                     onClick={() => addTag(tag)}
-                                    className="p-2 hover:bg-gray-200 cursor-pointer"
+                                    className="p-2 hover:bg-[var(--hover_background_color4)] cursor-pointer"
                                 >
                                     {tag.tagSTR}
                                 </li>
@@ -182,23 +182,25 @@ export default function ManageProducts() {
                         </ul>
                     )}
                 </div>
+
                 <div className="flex flex-wrap gap-2 col-span-2">
                     {filters.tags.map((tag) => (
-                        <span key={tag._id} className="bg-blue-100 px-2 py-1 rounded-full">
+                        <span key={tag._id} className="bg-[var(--background_color2)] px-2 py-1 rounded-full text-[var(--text_color1)] flex items-center">
                             {tag.tagSTR}
                             <button
                                 onClick={() => removeTag(tag._id)}
-                                className="ml-2 text-red-500"
+                                className="ml-2 text-[var(--danger_color)] hover:text-[var(--hover_danger_color)]"
                             >
                                 &times;
                             </button>
                         </span>
                     ))}
                 </div>
+
                 <div className="col-span-2">
                     <button
                         onClick={handleSearchClick}
-                        className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
+                        className="w-full px-4 py-2 rounded bg-[var(--warning_color)] text-[var(--text_color1)] hover:bg-[var(--hover_warning_color)] hover:text-[var(--hover_text_color1)]"
                     >
                         Search
                     </button>
@@ -210,9 +212,9 @@ export default function ManageProducts() {
                 {products.map((product) => (
                     <div
                         key={product._id}
-                        className="flex bg-white shadow rounded overflow-hidden h-[200px]"
+                        className="flex bg-[var(--background_color4)] shadow rounded overflow-hidden h-[200px]"
                     >
-                        <div className="w-[200px] bg-gray-100 flex-shrink-0">
+                        <div className="w-[200px] bg-[var(--background_color2)] flex-shrink-0">
                             <img
                                 src={product.imageURL || "https://via.placeholder.com/300x160?text=No+Image"}
                                 alt={product.name}
@@ -221,13 +223,13 @@ export default function ManageProducts() {
                         </div>
                         <div className="p-4 flex flex-col justify-between w-full">
                             <div>
-                                <h3 className="text-xl font-semibold">{product.name}</h3>
-                                <p className="text-sm text-gray-600 mt-1">{product.description}</p>
+                                <h3 className="text-xl font-semibold text-[var(--text_color2)]">{product.name}</h3>
+                                <p className="text-sm text-[var(--hover_text_color2)] mt-1">{product.description}</p>
                                 <div className="mt-2 flex gap-2 flex-wrap">
                                     {product.tags.map((tag, i) => (
                                         <span
                                             key={i}
-                                            className="text-xs bg-gray-200 px-2 py-1 rounded"
+                                            className="text-xs bg-[var(--background_color3)] text-[var(--text_color2)] px-2 py-1 rounded"
                                         >
                                             {typeof tag === "string" ? tag : tag.tagSTR}
                                         </span>
@@ -235,39 +237,62 @@ export default function ManageProducts() {
                                 </div>
                             </div>
                             <div className="flex justify-between items-center mt-4">
-                                <a
-                                    onClick={() =>
-                                        window.torrentFuncts.downloadTorrent(product.magnetLink, "default-folder")
-                                    }
-                                    className="text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded cursor-pointer"
+                                <button
+                                    onClick={async () => {
+                                        try {
+                                            const res = await secureFetch(`/v1/product/${product._id}`, {
+                                                method: "DELETE",
+                                            });
+                                            if (res.ok) {
+                                                setProducts(prev => prev.filter(p => p._id !== product._id));
+                                            } else {
+                                                const errData = await res.json();
+                                                console.error("Erro ao remover:", errData);
+                                                alert("Erro ao remover produto.");
+                                            }
+                                        } catch (err) {
+                                            console.error("Erro na requisição DELETE:", err);
+                                            alert("Erro ao remover produto.");
+                                        }
+                                    }}
+                                    className="bg-[var(--danger_color)] hover:bg-[var(--hover_danger_color)] text-[var(--text_color1)] px-3 py-1 rounded"
                                 >
-                                    Download
-                                </a>
-                                <span className="text-xs text-gray-400">v{product.version}</span>
+                                    Remover
+                                </button>
+                                <span className="text-xs text-[var(--hover_text_color2)]">v{product.version}</span>
                             </div>
                         </div>
                     </div>
                 ))}
             </div>
 
-            {/* Paginação */}
-            <div className="mt-8 flex justify-center gap-4">
-                <button
-                    disabled={filters.page === 0}
-                    onClick={() => handlePageChange(-1)}
-                    className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
-                >
-                    Previous
-                </button>
-                <span className="text-lg font-medium">Page {filters.page + 1}</span>
-                <button
-                    onClick={() => handlePageChange(1)}
-                    className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
-                    disabled={products.length < 20}
-                >
-                    Next
-                </button>
-            </div>
+            {products.length > 0 && (
+                <div className="mt-10 flex justify-center items-center gap-2">
+                    <button
+                        onClick={() => {
+                            if (filters.page > 0) {
+                                const newPage = filters.page - 1;
+                                setFilters(prev => ({ ...prev, page: newPage }));
+                            }
+                        }}
+                        className="px-4 py-2 text-[var(--text_color1)] hover:bg-[var(--hover_background_color2)]"
+                        disabled={filters.page === 0}
+                    >
+                        Previous
+                    </button>
+                    <span className="text-lg font-medium text-[var(--text_color2)]">| {filters.page + 1} |</span>
+                    <button
+                        onClick={() => {
+                            const newPage = filters.page + 1;
+                            setFilters(prev => ({ ...prev, page: newPage }));
+                        }}
+                        className="px-4 py-2 text-[var(--text_color1)] hover:bg-[var(--hover_background_color2)]"
+                        disabled={products.length < 20}
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
