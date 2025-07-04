@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { API_BASE_URL, setToken } from "../../apiConfig";
+import { API_BASE_URL } from "../../apiConfig";
 
 export default function LoginOverlay({ onClose, setToken, setTokenTime }) {
     const [username, setUsername] = useState("");
@@ -9,6 +9,7 @@ export default function LoginOverlay({ onClose, setToken, setTokenTime }) {
     const [error, setError] = useState("");
     const [isCreatingAccount, setIsCreatingAccount] = useState(false);
 
+    
     async function handleLogin(e) {
         e.preventDefault();
 
@@ -30,6 +31,7 @@ export default function LoginOverlay({ onClose, setToken, setTokenTime }) {
         setToken(data.token);
         setTokenTime(Date.now());
         localStorage.setItem("refreshToken", data.refreshToken);
+        window.dispatchEvent(new Event("login-success"));
         onClose();
     }
 
@@ -65,6 +67,7 @@ export default function LoginOverlay({ onClose, setToken, setTokenTime }) {
         setToken(data.token);
         setTokenTime(Date.now());
         localStorage.setItem("refreshToken", data.refreshToken);
+        window.dispatchEvent(new Event("login-success"));
         onClose();
     }
 

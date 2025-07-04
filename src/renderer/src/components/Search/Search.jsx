@@ -50,7 +50,7 @@ const Search = () => {
                     const parsedResults = JSON.parse(lastResults);
 
                     if (JSON.stringify(parsedParams) === JSON.stringify(params)) {
-                        console.log("Carregando resultado do cache");
+                        // console.log("Carregando resultado do cache");
                         setquery(parsedResults);
                         didInitialSearch.current = true;
                         return;
@@ -83,7 +83,7 @@ useEffect(() => {
     const fetchsimplequery = async (name) => {
         try {
             const res = await fetch(`${API_BASE_URL}/v1/othersearch/searchbyqueryall?query=${name}&limit=20&skip=0`);
-            console.log("url 3:" + `${API_BASE_URL}/v1/othersearch/searchbyqueryall?query=${name}&limit=20&skip=0`)
+            // console.log("url 3:" + `${API_BASE_URL}/v1/othersearch/searchbyqueryall?query=${name}&limit=20&skip=0`)
 
             const data = await res.json();
             setquery(data || {});
@@ -196,7 +196,7 @@ useEffect(() => {
         const tags = Array.isArray(params.tags) ? params.tags : [];
         const tagsParam = tags.length > 0 ? `&tags=${tags.map(t => t._id).join(",")}` : "";
         const url = `${API_BASE_URL}/v1/othersearch/searchbytitleandcategory?name=${params.name}${params.title ? `&title=${params.title}` : ''}${params.category ? `&category=${params.category}` : ''}${tagsParam}&limit=20&skip=${params.page*20}`;
-        console.log("url 1:" + url)
+        // console.log("url 1:" + url)
 
         try {
             const res = await fetch(url);
@@ -216,7 +216,7 @@ useEffect(() => {
         const tags = Array.isArray(customParams.tags) ? customParams.tags : [];
         const tagsParam = tags.length > 0 ? `&tags=${tags.map(t => t._id).join(",")}` : "";
         const url = `${API_BASE_URL}/v1/othersearch/searchbytitleandcategory?name=${customParams.name}${customParams.title ? `&title=${customParams.title}` : ''}${customParams.category ? `&category=${customParams.category}` : ''}${tagsParam}&limit=20&skip=${customParams.page*20}`;
-        console.log("url 2:" + url)
+        // console.log("url 2:" + url)
 
         try {
             const res = await fetch(url);
@@ -363,7 +363,7 @@ useEffect(() => {
                 </button>
             </div>
 
-            <div className="w-[75%] my-12 mr-20 bg-[var(--background_color3)] p-6">
+            <div className="w-[75%] my-12 mr-20 bg-[var(--background_color3)] p-6 shadow-xl">
                 {Array.isArray(query.titles) && query.titles.length > 0 && (
                     <h1 className="mb-4 text-3xl font-bold">Titles found:</h1>
                 )}
@@ -440,7 +440,7 @@ useEffect(() => {
                                     handleSearchParams(newParams);
                                 }
                             }}
-                            className="px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50"
+                            className="px-4 py-2 text-[var(--text_color1)] hover:bg-[var(--hover_background_color2)] disabled:opacity-50"
                             disabled={params.page === 0}
                         >
                             Previous
@@ -453,7 +453,7 @@ useEffect(() => {
                                 setParams(newParams);
                                 handleSearchParams(newParams);
                             }}
-                            className="px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
+                            className="px-4 py-2 text-[var(--text_color1)] hover:bg-[var(--hover_background_color2)] disabled:opacity-50"
                             disabled={(query.titles?.length || query.products?.length || 0) < 20}
                         >
                             Next

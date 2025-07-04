@@ -65,3 +65,21 @@ html, body {
     scrollbar-width: none;
     -ms-overflow-style: none;
 }
+
+.custom-scrollbar_bg2_color::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.custom-scrollbar_bg2_color::-webkit-scrollbar-track {
+    background: var(--background_color3);
+}
+
+.custom-scrollbar_bg2_color::-webkit-scrollbar-thumb {
+    background-color: var(--background_color2);
+    /* border-radius: 4px; */
+}
+
+.custom-scrollbar_bg2_color::-webkit-scrollbar-button {
+    display: none;
+}
