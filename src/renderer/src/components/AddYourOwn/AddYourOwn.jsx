@@ -1,19 +1,13 @@
-import { useEffect, useState } from "react";
-import { API_BASE_URL } from "../../apiConfig";
+import { useEffect, useState, version } from "react";
+import { API_BASE_URL, secureFetch } from "../../apiConfig";
 
 const AddYourOwn = () => {
     const [attributes, setAttributes] = useState(() => {
         const saved = sessionStorage.getItem("addYourOwnAttributes");
         if (saved) return JSON.parse(saved);
         return {
-            name: "",
-            description: "",
-            imageURL: "",
-            magnetLink: "",
             othersUrl: [],
-            title: "",
             tags: [],
-            version: "",
         };
         //* name: 'string',
         //* description: 'string',
@@ -115,21 +109,56 @@ const AddYourOwn = () => {
     const createOwnMagnetLink = async() => {
         const batchFilePaths = await window.torrentFuncts.openFile()
         if (batchFilePaths) {
-            console.log("path: ", batchFilePaths);
             const res = await window.torrentFuncts.createNewTorrent(batchFilePaths);
-            console.log("res: ", res);
+            document.getElementById("idMagnetLink").value = res;
         }
     }
 
     //* prepare the payload and do the post request
-    const addOwnProduct = () => {
+    const addOwnProduct = async() => {
         //? set params using the inputs (tags is set when the tag is select)
 
         //? check if all params that are required aren't null or blank string
         //? if some are then use message modal to show to the user what intel is missing
 
         //? send the request
-        console.log(attributes);
+        
+        //* name: 'string',
+        //* description: 'string',
+        //* imageURL: 'string',
+        //* magnetLink: 'string',
+        //* othersUrl: [
+        //*     "string"
+        //* ],
+        //* title: 'string',
+        //* tags: [
+        //*     { _id: "tag id", tagSTR: "tag name"}
+        //* ],
+        //* version: 'string',
+        
+        const payload = {
+            name: document.getElementById("idName").value,
+            description: document.getElementById("idDescription").value,
+            imageURL: document.getElementById("idImageURL").value,
+            magnetLink: document.getElementById("idMagnetLink").value, 
+            othersUrl: attributes.othersUrl,
+            title: document.getElementById("idTitle").value,
+            tags: attributes.tags,
+            version: document.getElementById("idVersion").value,
+        }
+        
+        console.log(payload);
+        
+        const request = await secureFetch(`/v1/product`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                accept: "application/json",
+            },
+            body: JSON.stringify(payload),
+        });
+
+        console.log(request);   
 
         //? using message model the request has been successful
     };
@@ -139,28 +168,28 @@ const AddYourOwn = () => {
             <input
                 type="text"
                 name="name"
-                value={attributes.name}
+                id="idName"
                 className="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-[var(--warning_color)]"
                 placeholder="Enter name"
             />
             <input
                 type="text"
                 name="description"
-                value={attributes.description}
+                id="idDescription"
                 className="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-[var(--warning_color)]"
                 placeholder="Enter description"
             />
             <input
                 type="text"
                 name="imageURL"
-                value={attributes.imageURL}
+                id="idImageURL"
                 className="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-[var(--warning_color)]"
                 placeholder="Enter imageURL"
             />
             <input
                 type="text"
                 name="magnetLink"
-                value={attributes.magnetLink}
+                id="idMagnetLink"
                 className="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-[var(--warning_color)]"
                 placeholder="Enter magnetLink"
             />
@@ -190,7 +219,7 @@ const AddYourOwn = () => {
             </div>
             <select
                 name="title"
-                value={attributes.title}
+                id="idTitle"
                 className="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-[var(--warning_color)]"
             >
                 <option>Select a title</option>
@@ -229,10 +258,11 @@ const AddYourOwn = () => {
             <input
                 type="text"
                 name="version"
-                value={attributes.version}
+                id="idVersion"
                 classname="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-[var(--warning_color)]"
                 placeholder="Enther version"
             />
+            <br/>
             <button className="w-full text-center px-4 py-2 rounded text-[var(--text_color)] hover:text-[var(--hover_text_color)] bg-[var(--warning_color)] hover:bg-[var(--hover_warning_color)]" onClick={addOwnProduct}>Add Your Own Product!</button>
         </div>
     );
