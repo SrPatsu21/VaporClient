@@ -87,7 +87,7 @@ const Header = ({ token, setToken, setTokenTime, openLoginOverlay }) => {
                     <Link to="/" className="max-xl:text-xl  text-3xl shrink p-2 hover:underline hover:text-[var(--hover_warning_color)]">
                         FAQ
                     </Link>
-                    <Link to="/" className="max-xl:text-xl  text-3xl shrink p-2 hover:underline hover:text-[var(--hover_warning_color)]">
+                    <Link to="/addyourown" className="max-xl:text-xl  text-3xl shrink p-2 hover:underline hover:text-[var(--hover_warning_color)]">
                         Add your own
                     </Link>
                 </div>

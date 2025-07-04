@@ -9,6 +9,14 @@ contextBridge.exposeInMainWorld("torrentFuncts", {
             throw err;
         }
     },
+    openFile: () => {
+        try {
+            return ipcRenderer.invoke("open-file")
+        } catch(err) {
+            console.error("Preload openFile error: ", err);
+            throw err;
+        }
+    },
     downloadTorrent: (magnetURI, folderPath) => {
         try {
             return ipcRenderer.invoke("download-torrent", magnetURI, folderPath);
@@ -39,6 +47,14 @@ contextBridge.exposeInMainWorld("torrentFuncts", {
         } catch(err) {
             console.error("Preload removeTorrent error: ", err);
             throw err;
+        }
+    },
+    // create-new-torrent
+    createNewTorrent: (filePath) =>{
+        try {
+            return ipcRenderer.invoke("create-new-torrent", filePath);
+        } catch (err) {
+            console.error("Preload createNewTorrent error: ", err);
         }
     }
 });

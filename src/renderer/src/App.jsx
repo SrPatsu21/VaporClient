@@ -10,6 +10,7 @@ import LoginOverlay from "./components/Login/LoginOverlay";
 import { getToken } from "./apiConfig";
 import ShowProductInfo from "./components/Product/showProductInfo";
 import MyProfile from "./components/Login/MyProfile";
+import AddYourOwn from "./components/AddYourOwn/AddYourOwn";
 
 function App() {
     const [token, setToken] = useState(null);
@@ -37,8 +38,9 @@ function App() {
                     <Route path="/about" element={<About/>} />
                     <Route path="/download" element={<Download/>} />
                     <Route path="/search" element={<Search/>} />
-                    <Route path="/product/:id" element={<ShowProductInfo />} />
+                    <Route path="/product/:id" element={<ShowProductInfo/>} />
                     <Route path="/myprofile" element={<MyProfile/>} />
+                    <Route path="/addyourown" element={<AddYourOwn/>} />
                 </Routes>
             </main>
             <Footer />

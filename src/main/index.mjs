@@ -28,13 +28,14 @@ function createWindow() {
         },
     });
 
-    mainWindow.webContents.openDevTools({ mode: "right" }); // DEV ONLY
+    mainWindow.webContents.openDevTools({ mode: "right" }); //! DEV ONLY
 
     if (app.isPackaged) {
         mainWindow.loadFile(path.join(__dirname, "../renderer/index.html"));
     } else {
         mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
     }
+    getClient();
 }
 
 async function readTorrentDataFile() {
@@ -123,6 +124,19 @@ ipcMain.handle("open-folder", async () => {
     }
 });
 
+// IPC for folder dialog
+ipcMain.handle("open-file", async () => {
+    try {
+        const result = await dialog.showOpenDialog({
+            properties: ["openFile", "multiSelections"],
+        });
+        return result.canceled ? null : result.filePaths[0];
+    } catch (err) {
+        console.error("open-folder error: ", err);
+        throw err;
+    }
+});
+
 // IPC for downloading torrent
 ipcMain.handle("download-torrent", async (event, magnetURI, folderPath) => {
     try {
@@ -203,7 +217,7 @@ ipcMain.handle("destroy-torrent", async (event, torrentID) => {
     }
 });
 
-// IPC for test
+// IPC for test //! DEV ONLY
 ipcMain.handle("get-single-torrent", async (event, torrentID) => {
     try {
         if (client && client.torrents) {
@@ -215,3 +229,20 @@ ipcMain.handle("get-single-torrent", async (event, torrentID) => {
         throw err;
     }
 });
+
+// IP for create new torrent
+ipcMain.handle("create-new-torrent", async (event, filePath) => {
+    try {
+        if (filePath) {
+            // console.log("path: ", filePath);
+            const url = await new Promise((resolve, reject) => {
+                client.seed(filePath, (torrent) => {
+                    resolve(torrent.magnetURI);
+                })});
+            console.log("url: ", url);
+            return url;
+        }
+    } catch (err) {
+        console.error("create-new-torrent error: ", err);
+    }
+})
